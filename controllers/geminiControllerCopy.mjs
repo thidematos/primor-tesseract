@@ -10,9 +10,30 @@ const countPDFPages = catchAsync(async (req, res, next) => {
   const doc = mupdf.Document.openDocument(req.file.buffer, 'application/pdf');
   const count = doc.countPages();
 
+  const arr = Array.from({ length: count });
+
+  const jsons = arr.map((_, ind) => {
+    const page = doc.loadPage(ind);
+
+    const json = JSON.parse(page.toStructuredText().asJSON());
+
+    return {
+      data: json.blocks.slice(14, -1).map((block) => block.lines),
+    };
+  });
+
+  /*
   req.doc = doc;
   req.totalPages = Array.from({ length: count });
   next();
+  */
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      pdfData: jsons,
+    },
+  });
 });
 
 const extractedPageData = catchAsync(async (req, res, next) => {

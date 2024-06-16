@@ -13,7 +13,6 @@ const initials = {
     file: null,
     pages: [],
   },
-  output: "",
 };
 
 function reducer(state, action) {
@@ -28,13 +27,6 @@ function reducer(state, action) {
         },
       };
 
-    case "teste": {
-      return {
-        ...state,
-        output: action.payload,
-      };
-    }
-
     default:
       throw new Error("Unknow action");
   }
@@ -47,12 +39,9 @@ function GeminiProvider({ children }) {
     const form = new FormData();
     form.append("pdf", file);
 
-    const res = await axios.post(
-      "api/v1/gemini/extractPDF?currentPage=0",
-      form,
-    );
+    const res = await axios.post("api/v1/gemini/extractPDF", form);
 
-    dispatch({ type: "teste", payload: res.data.data.produto });
+    console.log(res.data.data.pdfData);
   }
 
   return (
@@ -62,7 +51,6 @@ function GeminiProvider({ children }) {
         pdf: state.pdf,
         dispatch,
         extractedPDFData,
-        output: state.output,
       }}
     >
       {children}

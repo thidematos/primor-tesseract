@@ -7,52 +7,107 @@ class OutputManager {
       micro: output.indexOf('3)'),
       outros: output.indexOf('4)'),
     };
+  }
 
-    console.log(output);
+  #sliceAndSplit(replaceSimbol, area, nextArea) {
+    const str = this.output
+      .slice(
+        this.indexes[area],
+        nextArea === 'outros' && this.indexes.outros === -1
+          ? undefined
+          : this.indexes[nextArea]
+      )
+      .replace(replaceSimbol, '')
+      .split('|');
+
+    return str;
+  }
+
+  #split(string) {
+    const str = string.split(':').at(-1);
+
+    return str;
+  }
+
+  #filterAndCreateObject(arrayOriginal) {
+    const ids = arrayOriginal.filter((el) => el.startsWith('id'));
+
+    return ids.map((id) => {
+      const index = arrayOriginal.findIndex((el) => el === id);
+      return {
+        id: this.#split(id),
+        produto: this.#split(arrayOriginal[index + 1]),
+        qtd: Number.parseFloat(
+          this.#split(arrayOriginal[index + 2])
+            .replace('.', '')
+            .replace(',', '.')
+        ),
+      };
+    });
   }
 
   getProduto() {
-    const produtoStrSplited = this.output
-      .slice(this.indexes.produto, this.indexes.macro)
-      .replace('1)', '')
-      .split('|');
+    const produtoStrSplited = this.#sliceAndSplit('1)', 'produto', 'macro');
 
     this.produto = {
       id: produtoStrSplited[
         produtoStrSplited.findIndex((el) => el.includes('id:'))
-      ]?.replace('id:', ''),
+      ].replace('id:', ''),
       nome: produtoStrSplited[
         produtoStrSplited.findIndex((el) => el.includes('nome:'))
-      ]?.replace('nome:', ''),
+      ].replace('nome:', ''),
     };
 
-    this.getMacro();
-
-    return this.produto;
+    return this;
   }
 
   getMacro() {
-    const macroStrSplited = this.output
-      .slice(this.indexes.macro, this.indexes.micro)
-      .replace('2)', '')
-      .split('|');
+    const macroOriginal = this.#sliceAndSplit('2)', 'macro', 'micro');
 
-    console.log(macroStrSplited);
+    if (!macroOriginal) {
+      this.macro = [];
+      return this;
+    }
+
+    const macro = this.#filterAndCreateObject(macroOriginal);
+
+    this.macro = macro;
+
+    return this;
+  }
+
+  getMicro() {
+    const microOriginal = this.#sliceAndSplit('3)', 'micro', 'outros');
+
+    if (!microOriginal) {
+      this.micro = [];
+      return this;
+    }
+
+    const micro = this.#filterAndCreateObject(microOriginal);
+
+    this.micro = micro;
+
+    return this;
+  }
+
+  getOutros() {
+    const outrosOriginal =
+      this.indexes.outros === -1
+        ? null
+        : this.output.slice(this.indexes.outros).split('|');
+
+    if (!outrosOriginal) {
+      this.outros = [];
+      return this;
+    }
+
+    const outros = this.#filterAndCreateObject(outrosOriginal);
+
+    this.outros = outros;
+
+    return this;
   }
 }
-
-/*
-const macro = output
-  .slice(indexes.macro, indexes.micro)
-  .replace('2)', '')
-  .split('|');
-
-const micro = output.slice(
-  indexes.micro,
-  indexes.outros === -1 ? undefined : indexes.outros
-);
-
-const outros = indexes.outros === -1 ? null : output.slice(indexes.outros);
-*/
 
 export { OutputManager };

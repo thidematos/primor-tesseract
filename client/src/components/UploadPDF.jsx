@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useGemini } from "../context/GeminiProvider";
 
 function UploadPDF() {
-  const { dispatch, pdf, extractedPDFData, output } = useGemini();
+  const { dispatch, pdf, extractedPDFData } = useGemini();
   const [uploadedPDF, setUploadedPDF] = useState(null);
 
   return (
@@ -23,10 +23,7 @@ function UploadPDF() {
 
       {pdf.totalPages}
 
-      <div className="w-full flex-row items-center justify-center gap-10 border-b border-b-gray-400 pb-6">
-        {<p>ID: {output.id}</p>}
-        {<p>NOME: {output.nome}</p>}
-      </div>
+      <div className="w-full flex-row items-center justify-center gap-10 border-b border-b-gray-400 pb-6"></div>
     </div>
   );
 }
