@@ -1,13 +1,15 @@
 import express from 'express';
 import upload from './../utils/multerUpload.mjs';
-import * as geminiController from './../controllers/geminiControllerCopy.mjs';
+import * as pdfController from '../controllers/pdfController.mjs';
 
 const router = express.Router();
 
 router.post(
   '/extractPDF',
   upload.single('pdf'),
-  geminiController.countPDFPages
+  pdfController.generatePDFPages,
+  pdfController.sequelizePageContent,
+  pdfController.createSegmentContent
 );
 
 export default router;
