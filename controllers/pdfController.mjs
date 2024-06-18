@@ -1,28 +1,34 @@
-import { PDFManager } from '../utils/PdfManager.mjs';
+import { PDFManager } from '../managers/PDFManager.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import * as mupdf from 'mupdf';
 
 const generatePDFPages = catchAsync(async (req, res, next) => {
-  const doc = mupdf.Document.openDocument(req.file.buffer, 'application/pdf');
-  const count = doc.countPages();
+  const extractedPagesContent = [];
 
-  const arr = Array.from({ length: count });
+  req.files.forEach((file) => {
+    const doc = mupdf.Document.openDocument(file.buffer, 'application/pdf');
+    const count = doc.countPages();
 
-  const startContentIndex = 14;
+    const arr = Array.from({ length: count });
 
-  const extractedPagesContent = arr.map((_, ind) => {
-    const page = doc.loadPage(ind);
+    const startContentIndex = 14;
 
-    const json = JSON.parse(page.toStructuredText().asJSON());
+    extractedPagesContent.push(
+      arr.map((_, ind) => {
+        const page = doc.loadPage(ind);
 
-    return {
-      data: json.blocks
-        .slice(startContentIndex, -1)
-        .map((block) => block.lines)
-        .map((item) => {
-          return item.map((itemNested) => itemNested.text);
-        }),
-    };
+        const json = JSON.parse(page.toStructuredText().asJSON());
+
+        return {
+          data: json.blocks
+            .slice(startContentIndex, -1)
+            .map((block) => block.lines)
+            .map((item) => {
+              return item.map((itemNested) => itemNested.text);
+            }),
+        };
+      })
+    );
   });
 
   req.extractedPagesContent = extractedPagesContent;
@@ -33,10 +39,13 @@ const generatePDFPages = catchAsync(async (req, res, next) => {
 const sequelizePageContent = (req, res, next) => {
   //Cada page tem uma array de arrays que contem a data de cada linha.
   const instanceManager = new PDFManager();
+  const mappedExtractedContent = [];
 
-  const mappedExtractedContent = req.extractedPagesContent.map((page) =>
-    instanceManager.sequelizeSegment(page)
-  );
+  req.extractedPagesContent.forEach((file) => {
+    mappedExtractedContent.push(
+      file.map((page) => instanceManager.sequelizeSegment(page))
+    );
+  });
 
   req.extractedPagesContent = mappedExtractedContent;
 
@@ -44,21 +53,30 @@ const sequelizePageContent = (req, res, next) => {
 };
 
 const createSegmentContent = (req, res, next) => {
-  const instanceManager = new PDFManager();
+  const instanceManager = new PDFManager(
+    JSON.parse(req.body.precos),
+    JSON.parse(req.body.week)
+  );
 
-  const segmentedPageContent = req.extractedPagesContent.map((page) => {
-    const pageMacro = instanceManager.createSegment(page, 'macro');
+  const segmentedPageContent = [];
 
-    const pageMicro = instanceManager.createSegment(page, 'micro');
+  req.extractedPagesContent.forEach((file) => {
+    segmentedPageContent.push(
+      file.map((page) => {
+        const pageMacro = instanceManager.createSegment(page, 'macro');
 
-    const pageOutros = instanceManager.createSegment(page, 'outros');
+        const pageMicro = instanceManager.createSegment(page, 'micro');
 
-    return {
-      macro: pageMacro,
-      micro: pageMicro,
-      outros: pageOutros,
-      produto: page.produto,
-    };
+        const pageOutros = instanceManager.createSegment(page, 'outros');
+
+        return {
+          macro: pageMacro,
+          micro: pageMicro,
+          outros: pageOutros,
+          produto: page.produto,
+        };
+      })
+    );
   });
 
   req.segmentedPageContent = segmentedPageContent;

@@ -1,11 +1,23 @@
 import axios from "axios";
-import { createContext, useCallback, useContext, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 
 const IngredientsContext = createContext();
 
 const initials = {
   status: "ready",
   ingredients: [],
+  precos: [],
+  week: {
+    start: "",
+    end: "",
+  },
 };
 
 function reducer(state, action) {
@@ -16,11 +28,40 @@ function reducer(state, action) {
         status: "loading",
       };
 
+    case "changeOnWeek":
+      return {
+        ...state,
+        week: {
+          start: action.payload.start || state.week.start,
+          end: action.payload.end || state.week.end,
+        },
+      };
+
+    case "changeOnPreco":
+      return {
+        ...state,
+        precos: state.precos.map((el) => {
+          if (el.idExterno === action.payload.currentIngredient.idExterno)
+            return {
+              ...el,
+              preco: Number(action.payload.value),
+            };
+
+          return el;
+        }),
+      };
+
     case "fetched/ready":
       return {
         ...state,
         status: "ready",
         ingredients: action.payload,
+        precos: action.payload.map((ingredient) => {
+          return {
+            idExterno: ingredient.idExterno,
+            preco: localStorage.getItem(ingredient.idExterno) || "",
+          };
+        }),
       };
 
     default:
@@ -29,7 +70,10 @@ function reducer(state, action) {
 }
 
 function IngredientsProvider({ children }) {
-  const [{ status, ingredients }, dispatch] = useReducer(reducer, initials);
+  const [{ status, ingredients, precos, week }, dispatch] = useReducer(
+    reducer,
+    initials,
+  );
 
   const getIngredients = useCallback(async () => {
     dispatch({ type: "loading" });
@@ -39,9 +83,44 @@ function IngredientsProvider({ children }) {
     dispatch({ type: "fetched/ready", payload: res.data.data.ingredients });
   }, []);
 
+  const ingredientsSorted = ingredients
+    .slice()
+    .sort((a, b) => a.idExterno - b.idExterno);
+
+  const getPreco = useCallback(
+    (currentIngredient) => {
+      return precos[
+        precos.findIndex((el) => el.idExterno === currentIngredient.idExterno)
+      ].preco;
+    },
+    [precos],
+  );
+
+  const handleChangePreco = useCallback((currentIngredient, value) => {
+    dispatch({
+      type: "changeOnPreco",
+      payload: {
+        value,
+        currentIngredient,
+      },
+    });
+
+    localStorage.setItem(currentIngredient.idExterno, value);
+  }, []);
+
   return (
     <IngredientsContext.Provider
-      value={{ status, ingredients, dispatch, getIngredients }}
+      value={{
+        status,
+        ingredients,
+        dispatch,
+        getIngredients,
+        ingredientsSorted,
+        precos,
+        getPreco,
+        handleChangePreco,
+        week,
+      }}
     >
       {children}
     </IngredientsContext.Provider>

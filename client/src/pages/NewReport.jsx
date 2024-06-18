@@ -1,10 +1,10 @@
 import NewReportForm from "../components/NewReportForm";
-import Logo from "../utils/Logo";
+import SubmitPDF from "../components/SubmitPDF";
 
 function NewReport() {
   return (
-    <div className="markup grid h-full w-[90%] grow grid-cols-6">
-      <Logo />
+    <div className="grid h-full w-[90%] grow grid-cols-6">
+      <SubmitPDF />
       <NewReportForm />
     </div>
   );

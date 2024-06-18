@@ -1,57 +1,36 @@
+import IngredientManager from '../managers/IngredientsManager.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import Ingrediente from './../models/ingredienteModel.mjs';
 
 const createIngredientes = catchAsync(async (req, res, next) => {
-  const segmentedPageContent = req.segmentedPageContent;
+  const filesData = req.segmentedPageContent;
 
-  const ingredients = await Ingrediente.find().select('idExterno');
-  const usedID = ingredients.map((ingredient) => ingredient.idExterno);
+  const ingredientManagerInstance = new IngredientManager(
+    JSON.parse(req.body.precos),
+    req.semanaId
+  );
 
-  segmentedPageContent.forEach((segment) => {
-    segment.macro?.forEach(async (macro) => {
-      const id = Number.parseInt(macro.id);
+  await ingredientManagerInstance.createUsedList();
 
-      if (!usedID.includes(id)) {
-        console.log('Novo macro: ', macro.nome);
-        usedID.push(id);
-        await Ingrediente.create({
-          idExterno: id,
-          nome: macro.nome,
-        });
-      }
-    });
+  filesData.forEach((file) => {
+    file.forEach((product) => {
+      product.macro?.forEach(async (macroInsumo) => {
+        await ingredientManagerInstance.createInsumo(macroInsumo);
+      });
 
-    segment.micro?.forEach(async (micro) => {
-      const id = Number.parseInt(micro.id);
-      if (!usedID.includes(id)) {
-        console.log('Novo micro: ', micro.nome);
-        usedID.push(id);
-        await Ingrediente.create({
-          idExterno: id,
-          nome: micro.nome,
-        });
-      }
-    });
+      product.micro?.forEach(async (microInsumo) => {
+        await ingredientManagerInstance.createInsumo(microInsumo);
+      });
 
-    segment.outros?.forEach(async (outros) => {
-      const id = Number.parseInt(outros.id);
-      if (!usedID.includes(id)) {
-        console.log('Novo outro: ', outros.nome);
-        usedID.push(id);
-        await Ingrediente.create({
-          idExterno: id,
-          nome: outros.nome,
-        });
-      }
+      product.outros?.forEach(async (outrosInsumo) => {
+        await ingredientManagerInstance.createInsumo(outrosInsumo);
+      });
     });
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      pdfData: segmentedPageContent,
-    },
-  });
+  req.filesData = filesData;
+
+  next();
 });
 
 const getAllIngredients = catchAsync(async (req, res, next) => {

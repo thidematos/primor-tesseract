@@ -24,8 +24,8 @@ const ingredienteSchema = new mongoose.Schema({
   precoSemana: [
     {
       semana: {
-        inicio: Date,
-        fim: Date,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Semana',
       },
       preco: Number,
     },

@@ -5,14 +5,13 @@ class PDFManager {
     batida: [0, 3],
   };
 
-  constructor() {}
+  constructor(prices, week) {
+    this.prices = prices;
+    this.week = week;
+  }
 
   findSegmentIndex(arr, segmentStr) {
     return arr.findIndex((arr) => arr.includes(segmentStr));
-  }
-
-  getProdutoIndex() {
-    return;
   }
 
   createSegment(page, segmentStr) {
@@ -22,6 +21,11 @@ class PDFManager {
         nome: el[2],
         qtd:
           Number.parseFloat(el[3]?.replace('.', '').replace(',', '.')) || '-',
+        price:
+          this.prices.find(
+            (ingredient) =>
+              Number.parseInt(el[1]) === Number.parseInt(ingredient.idExterno)
+          )?.preco || '0',
       };
     });
 

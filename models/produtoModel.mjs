@@ -15,11 +15,8 @@ const produtoSchema = new mongoose.Schema({
       semana: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Semana',
-        required: true,
       },
-      precoTotal: {
-        type: Number,
-      },
+      precoTotal: Number,
     },
   ],
   ingredientesSemanais: [
