@@ -1,13 +1,24 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UploadPDF from "./components/UploadPDF";
-import { GeminiProvider, useGemini } from "./context/GeminiProvider";
+import { ExtractProvider } from "./context/ExtractProvider";
+import RenderPDF from "./pages/RenderPDF";
+import NewReport from "./pages/NewReport";
+import { IngredientsProvider } from "./context/IngredientsProvider";
 
 function App() {
   return (
-    <GeminiProvider>
-      <main className="flex min-h-screen w-screen flex-col items-center justify-center">
-        <UploadPDF />
-      </main>
-    </GeminiProvider>
+    <main className="flex h-[100dvh] w-[100dsvw] flex-col items-center justify-center bg-zinc-100">
+      <BrowserRouter>
+        <ExtractProvider>
+          <IngredientsProvider>
+            <Routes>
+              <Route path="/" element={<RenderPDF />} />
+              <Route path="/novo-relatorio" element={<NewReport />} />
+            </Routes>
+          </IngredientsProvider>
+        </ExtractProvider>
+      </BrowserRouter>
+    </main>
   );
 }
 

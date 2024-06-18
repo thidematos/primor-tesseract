@@ -1,3 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.centerAbsolute {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader {
+  border-radius: 50%;
+
+  animation: spin 2s linear infinite;
+}
+
+.active {
+  @apply text-xl text-blue-500;
+}
+
+.markup {
+  @apply border border-red-500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  @apply size-[5px] rounded-lg;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply rounded-lg bg-gray-300;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply rounded-lg bg-gray-500;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply rounded-lg bg-gray-600;
+}

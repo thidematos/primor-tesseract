@@ -42,8 +42,6 @@ class PDFManager {
       outros: [],
     };
 
-    console.log(page.data);
-
     pageContent.produto = {
       nome: page.data.at(this.produtoIndex.nome).at(0),
       //IF the content does not have extrusada/triturada line, look at the first line.

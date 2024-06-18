@@ -61,12 +61,9 @@ const createSegmentContent = (req, res, next) => {
     };
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      pdfData: segmentedPageContent,
-    },
-  });
+  req.segmentedPageContent = segmentedPageContent;
+
+  next();
 };
 
 export { generatePDFPages, sequelizePageContent, createSegmentContent };
