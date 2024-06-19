@@ -17,7 +17,7 @@ function PDFView() {
       {status === "loading" && <Loader />}
       {status === "ready" && (
         <>
-          <div className="dataTable font-noto flex max-h-[80%] w-full grow flex-col items-center justify-center gap-8 overflow-y-scroll text-gray-800">
+          <div className="dataTable flex max-h-[80%] w-full grow flex-col items-center justify-center gap-8 overflow-y-scroll font-noto text-gray-800">
             <Title />
             <Macro />
             <Micro />

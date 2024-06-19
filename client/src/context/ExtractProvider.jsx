@@ -52,6 +52,255 @@ function ExtractProvider({ children }) {
   const navigate = useNavigate();
 
   const { precos, week } = useIngredients();
+  /*
+  const { week } = useIngredients();
+  const precos = [
+    {
+      idExterno: 31,
+      preco: "0.745",
+    },
+    {
+      idExterno: 1,
+      preco: "1.000",
+    },
+    {
+      idExterno: 45,
+      preco: "1.020",
+    },
+    {
+      idExterno: 115,
+      preco: "2.600",
+    },
+    {
+      idExterno: 4,
+      preco: "1.760",
+    },
+    {
+      idExterno: 16,
+      preco: "0.810",
+    },
+    {
+      idExterno: 124,
+      preco: "0.400",
+    },
+    {
+      idExterno: 149,
+      preco: "0.332",
+    },
+    {
+      idExterno: 104,
+      preco: "1.750",
+    },
+    {
+      idExterno: 61,
+      preco: "1.015",
+    },
+    {
+      idExterno: 313,
+      preco: "40",
+    },
+    {
+      idExterno: 316,
+      preco: "58",
+    },
+    {
+      idExterno: 119,
+      preco: "5.000",
+    },
+    {
+      idExterno: 13,
+      preco: "2.225",
+    },
+    {
+      idExterno: 317,
+      preco: "100",
+    },
+    {
+      idExterno: 312,
+      preco: "36.610",
+    },
+    {
+      idExterno: 192,
+      preco: "1.780",
+    },
+    {
+      idExterno: 402,
+      preco: "28.872",
+    },
+    {
+      idExterno: 394,
+      preco: "17.970",
+    },
+    {
+      idExterno: 403,
+      preco: "83.012",
+    },
+    {
+      idExterno: 171,
+      preco: "4.850",
+    },
+    {
+      idExterno: 114,
+      preco: "5.000",
+    },
+    {
+      idExterno: 314,
+      preco: "55",
+    },
+    {
+      idExterno: 141,
+      preco: "0.630",
+    },
+    {
+      idExterno: 288,
+      preco: "9.5",
+    },
+    {
+      idExterno: 64,
+      preco: "2.110",
+    },
+    {
+      idExterno: 401,
+      preco: "50.371",
+    },
+    {
+      idExterno: 102,
+      preco: "1.350",
+    },
+    {
+      idExterno: 400,
+      preco: "82.083",
+    },
+    {
+      idExterno: 49,
+      preco: "7.592",
+    },
+    {
+      idExterno: 112,
+      preco: "4.150",
+    },
+    {
+      idExterno: 393,
+      preco: "27.590",
+    },
+    {
+      idExterno: 391,
+      preco: "14.650",
+    },
+    {
+      idExterno: 179,
+      preco: "6.680",
+    },
+    {
+      idExterno: 410,
+      preco: "40.652",
+    },
+    {
+      idExterno: 162,
+      preco: "14.650",
+    },
+    {
+      idExterno: 298,
+      preco: "13",
+    },
+    {
+      idExterno: 158,
+      preco: "29.000",
+    },
+    {
+      idExterno: 173,
+      preco: "9.170",
+    },
+    {
+      idExterno: 172,
+      preco: "6.220",
+    },
+    {
+      idExterno: 161,
+      preco: "14.700",
+    },
+    {
+      idExterno: 390,
+      preco: "200",
+    },
+    {
+      idExterno: 395,
+      preco: "21.026",
+    },
+    {
+      idExterno: 315,
+      preco: "40",
+    },
+    {
+      idExterno: 392,
+      preco: "20.250",
+    },
+    {
+      idExterno: 261,
+      preco: "6.400",
+    },
+    {
+      idExterno: 262,
+      preco: "9.100",
+    },
+    {
+      idExterno: 276,
+      preco: "8",
+    },
+    {
+      idExterno: 257,
+      preco: "5.300",
+    },
+    {
+      idExterno: 190,
+      preco: "1.050",
+    },
+    {
+      idExterno: 275,
+      preco: "9.750",
+    },
+    {
+      idExterno: 279,
+      preco: "4.2",
+    },
+    {
+      idExterno: 287,
+      preco: "0.1",
+    },
+    {
+      idExterno: 289,
+      preco: "4.4",
+    },
+    {
+      idExterno: 277,
+      preco: "0.1",
+    },
+    {
+      idExterno: 43,
+      preco: "1.215",
+    },
+    {
+      idExterno: 2290,
+      preco: "0.1",
+    },
+    {
+      idExterno: 19,
+      preco: "1.140",
+    },
+    {
+      idExterno: 2291,
+      preco: "0.1",
+    },
+    {
+      idExterno: 131,
+      preco: "2.100",
+    },
+    {
+      idExterno: 2283,
+      preco: "0.1",
+    },
+  ];
+  */
 
   async function extractPDFData(...file) {
     dispatch({ type: "uploaded/loading", payload: file });
@@ -69,6 +318,8 @@ function ExtractProvider({ children }) {
     const res = await axios.post("api/v1/extract/extractPDF", form);
 
     dispatch({ type: "extractedPDF/loaded", payload: res.data.data.pdfData });
+
+    navigate("/relatorio-overview");
   }
 
   return (

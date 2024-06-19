@@ -6,11 +6,15 @@ import { useCurrentPage } from "../hooks/useCurrentPage";
 import InteractionButton from "../utils/InteractionButton";
 
 function Sidebar() {
+  const { pdfFile, pdfTempUrl } = useExtract();
+
   return (
     <div className="relative flex grow flex-col items-center justify-center overflow-x-hidden">
       <Logo width="w-[50%]" />
       <PDFInfo />
-      <PDFViewer />
+      {pdfFile.map((pdf, ind) => (
+        <PDFViewer key={pdf.name} pdf={pdfTempUrl[ind]} />
+      ))}
     </div>
   );
 }
@@ -21,20 +25,19 @@ function PDFInfo() {
   return (
     <div className="my-6 flex flex-row items-center justify-center gap-6">
       <h1 className="font-montserrat text-xl text-gray-800 drop-shadow-sm">
-        {pdfFile?.name.split(".").at(0)}
+        {pdfFile[0]?.name.split(".").at(0)}
       </h1>
     </div>
   );
 }
 
-function PDFViewer() {
+function PDFViewer({ pdfTempUrl }) {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.min.mjs",
     import.meta.url,
   ).toString();
 
   const { currentPage } = useCurrentPage();
-  const { pdfTempUrl } = useExtract();
 
   const [zoom, setZoom] = useState(2.5);
 
@@ -79,7 +82,7 @@ function Options({ setZoom }) {
         <img src="/zoom-in.png" />
       </InteractionButton>
       <InteractionButton className="w-[13%]">
-        <a href={pdfTempUrl} download={pdfFile?.name}>
+        <a href={pdfTempUrl[0]} download={pdfFile[0]?.name}>
           <img src="/download-icon.png" />
         </a>
       </InteractionButton>

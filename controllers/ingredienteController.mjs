@@ -44,7 +44,7 @@ const createIngredientes = catchAsync(async (req, res, next) => {
 });
 
 const getAllIngredients = catchAsync(async (req, res, next) => {
-  const ingredients = await Ingrediente.find();
+  const ingredients = await Ingrediente.find().populate('precoSemana.semana');
 
   res.status(200).json({
     status: 'success',

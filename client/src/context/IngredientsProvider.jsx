@@ -44,7 +44,7 @@ function reducer(state, action) {
           if (el.idExterno === action.payload.currentIngredient.idExterno)
             return {
               ...el,
-              preco: Number(action.payload.value),
+              preco: action.payload.value,
             };
 
           return el;
@@ -56,10 +56,10 @@ function reducer(state, action) {
         ...state,
         status: "ready",
         ingredients: action.payload,
-        precos: action.payload.map((ingredient) => {
+        precos: Array.from({ length: action.payload.length }, (el, ind) => {
           return {
-            idExterno: ingredient.idExterno,
-            preco: localStorage.getItem(ingredient.idExterno) || "",
+            idExterno: action.payload[ind].idExterno,
+            preco: "",
           };
         }),
       };
@@ -74,6 +74,8 @@ function IngredientsProvider({ children }) {
     reducer,
     initials,
   );
+
+  const [currentInput, setCurrentInput] = useState(0);
 
   const getIngredients = useCallback(async () => {
     dispatch({ type: "loading" });
@@ -104,8 +106,6 @@ function IngredientsProvider({ children }) {
         currentIngredient,
       },
     });
-
-    localStorage.setItem(currentIngredient.idExterno, value);
   }, []);
 
   return (
@@ -120,6 +120,10 @@ function IngredientsProvider({ children }) {
         getPreco,
         handleChangePreco,
         week,
+        currentInput: {
+          state: currentInput,
+          setter: setCurrentInput,
+        },
       }}
     >
       {children}
