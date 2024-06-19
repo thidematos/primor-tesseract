@@ -11,7 +11,7 @@ function App() {
         <IngredientsProvider>
           <ExtractProvider>
             <Routes>
-              <Route path="/" element={<RenderPDF />} />
+              <Route path="/relatorio-overview" element={<RenderPDF />} />
               <Route path="/novo-relatorio" element={<NewReport />} />
             </Routes>
           </ExtractProvider>

@@ -3,6 +3,7 @@ import { useReducer } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
 import { useIngredients } from "./IngredientsProvider";
+import { useNavigate } from "react-router-dom";
 
 const ExtractContext = createContext();
 
@@ -48,6 +49,8 @@ function reducer(state, action) {
 function ExtractProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initials);
 
+  const navigate = useNavigate();
+
   const { precos, week } = useIngredients();
 
   async function extractPDFData(...file) {
@@ -64,9 +67,6 @@ function ExtractProvider({ children }) {
     form.append("precos", JSON.stringify(precos));
 
     const res = await axios.post("api/v1/extract/extractPDF", form);
-
-    console.log(res.data.data.pdfData);
-    console.log(res.data.data.prices);
 
     dispatch({ type: "extractedPDF/loaded", payload: res.data.data.pdfData });
   }

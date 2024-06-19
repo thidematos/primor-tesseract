@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import AppError from './utils/appError.mjs';
 import globalErrorHandler from './controllers/errorController.mjs';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
@@ -13,6 +14,14 @@ import produtoRouter from './routers/produtoRouter.mjs';
 app.use(express.json({ limit: '10kb' }));
 
 app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+  req.id = uuidv4();
+
+  console.log(req.id);
+
+  next();
+});
 
 app.use('/api/v1/extract', extractRouter);
 

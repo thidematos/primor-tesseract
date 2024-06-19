@@ -19,8 +19,7 @@ class PDFManager {
       return {
         id: el[1],
         nome: el[2],
-        qtd:
-          Number.parseFloat(el[3]?.replace('.', '').replace(',', '.')) || '-',
+        qtd: Number.parseFloat(el[3]?.replace('.', '').replace(',', '.')) || 0,
         price:
           this.prices.find(
             (ingredient) =>

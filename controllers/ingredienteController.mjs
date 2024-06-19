@@ -1,4 +1,5 @@
 import IngredientManager from '../managers/IngredientsManager.mjs';
+import Semana from '../models/semanaModel.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import Ingrediente from './../models/ingredienteModel.mjs';
 
@@ -7,26 +8,35 @@ const createIngredientes = catchAsync(async (req, res, next) => {
 
   const ingredientManagerInstance = new IngredientManager(
     JSON.parse(req.body.precos),
-    req.semanaId
+    req.semana._id,
+    req.id
   );
 
-  await ingredientManagerInstance.createUsedList();
+  await ingredientManagerInstance.getAllIngredients();
 
-  filesData.forEach((file) => {
-    file.forEach((product) => {
-      product.macro?.forEach(async (macroInsumo) => {
-        await ingredientManagerInstance.createInsumo(macroInsumo);
+  const filesDataPromises = filesData.map(async (file) => {
+    const filePromises = file.map(async (product) => {
+      const macroPromises = product.macro?.map(async (macroInsumo) => {
+        await ingredientManagerInstance.choosePath(macroInsumo);
       });
 
-      product.micro?.forEach(async (microInsumo) => {
-        await ingredientManagerInstance.createInsumo(microInsumo);
+      const microPromises = product.micro?.map(async (microInsumo) => {
+        await ingredientManagerInstance.choosePath(microInsumo);
       });
 
-      product.outros?.forEach(async (outrosInsumo) => {
-        await ingredientManagerInstance.createInsumo(outrosInsumo);
+      const outrosPromises = product.outros?.map(async (outrosInsumo) => {
+        await ingredientManagerInstance.choosePath(outrosInsumo);
       });
+
+      await Promise.all(macroPromises);
+      await Promise.all(microPromises);
+      await Promise.all(outrosPromises);
     });
+
+    await Promise.all(filePromises);
   });
+
+  await Promise.all(filesDataPromises);
 
   req.filesData = filesData;
 
@@ -75,4 +85,51 @@ const getIngredient = catchAsync(async (req, res, next) => {
   });
 });
 
-export { createIngredientes, getAllIngredients, getIngredient };
+const deleteAllFuckingIngredients = catchAsync(async (req, res, next) => {
+  await Ingrediente.deleteMany({});
+
+  res.status(204).json({
+    status: 'success',
+  });
+});
+
+const verifyPrices = catchAsync(async (req, res, next) => {
+  const filesData = req.filesData;
+
+  const precos = JSON.parse(req.body.precos);
+
+  const ingredients = await Ingrediente.find({}).select(
+    'idExterno nome precoSemana'
+  );
+
+  const ingredientsPromise = ingredients.map(async (insumo) => {
+    if (String(insumo.precoSemana.at(-1).semana) !== String(req.semana._id)) {
+      insumo.precoSemana.push({
+        semana: String(req.semana._id),
+        preco: precos.find((preco) => preco.idExterno === insumo.idExterno)
+          .preco,
+      });
+
+      console.log('Atualizado: ', insumo.nome);
+
+      await insumo.save({ j: true });
+    }
+  });
+
+  await Promise.all(ingredientsPromise);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      pdfData: filesData,
+    },
+  });
+});
+
+export {
+  createIngredientes,
+  getAllIngredients,
+  getIngredient,
+  deleteAllFuckingIngredients,
+  verifyPrices,
+};

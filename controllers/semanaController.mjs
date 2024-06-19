@@ -9,7 +9,7 @@ const createSemana = catchAsync(async (req, res, next) => {
   req.segmentedPageContent.forEach((file, ind) => {
     const pdfName = `report-semanal-${Date.now()}-${ind + 1}.pdf`;
 
-    fs.writeFile(`./pdf/${pdfName}`, req.files[ind].buffer, (err) => {
+    fs.writeFileSync(`./pdf/${pdfName}`, req.files[ind].buffer, (err) => {
       if (err) next(new AppError('There was a error in the PDF writing.'));
     });
 
@@ -26,7 +26,7 @@ const createSemana = catchAsync(async (req, res, next) => {
     pdf: pdfNames,
   });
 
-  req.semanaId = newSemana._id;
+  req.semana = newSemana;
 
   next();
 });

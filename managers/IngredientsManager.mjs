@@ -10,14 +10,10 @@ class IngredientManager {
     },
   ];
 
-  constructor(prices, semana) {
+  constructor(prices, semana, reqId) {
     this.prices = prices;
     this.semana = semana;
-  }
-
-  async createUsedList() {
-    const ingredients = await Ingrediente.find();
-    this.usedList = ingredients.map((ingredient) => ingredient.idExterno);
+    this.alreadyIncluded = [];
   }
 
   verifiesIfBlacklisted(id) {
@@ -36,29 +32,77 @@ class IngredientManager {
     return insumo.preco;
   }
 
-  isUsed(id) {
-    return this.usedList.findIndex((idExterno) => idExterno === id) !== -1;
+  /*
+  async addWeeklyReport(insumo) {
+    try {
+      const precoSemanaToPush = {
+        semana: this.semana,
+        preco: Number.parseFloat(insumo.price),
+        alreadyIncluded: true,
+      };
+
+      const id = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
+
+      const currentInsumo = await Ingrediente.findOne({
+        idExterno: id,
+      });
+
+      console.log('Hi from weekly!');
+
+      if (this.allIngredients.includes(id)) return;
+
+      this.allIngredients.push(id);
+
+      console.log('Atualizou: ', currentInsumo.nome);
+
+      currentInsumo.precoSemana.push(precoSemanaToPush);
+
+      await currentInsumo.save({ j: true });
+    } catch (err) {
+      console.log(err);
+      process.exit(-1);
+    }
+  }
+  */
+
+  async getAllIngredients() {
+    const ingredients = await Ingrediente.find({});
+
+    this.allIngredients = ingredients.map((el) => el.idExterno);
+  }
+
+  async choosePath(insumo) {
+    const currentId = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
+
+    const isAlreadyInDB = this.allIngredients.some((id) => id === currentId);
+
+    if (isAlreadyInDB) return; //await this.addWeeklyReport(insumo);
+
+    this.allIngredients.push(currentId);
+    await this.createInsumo(insumo);
   }
 
   async createInsumo(insumo) {
-    const id = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
+    try {
+      const id = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
+      // this.alreadyIncluded.push(id);
 
-    if (this.isUsed(id)) return;
+      const precoSemanaToPush = {
+        semana: this.semana,
+        preco: Number.parseFloat(insumo.price),
+      };
 
-    const precoSemanaToPush = {
-      semana: this.semana,
-      preco: Number.parseFloat(insumo.price),
-    };
+      console.log('Novo insumo: ', insumo.nome);
 
-    this.usedList.push(id);
-
-    console.log('Novo insumo: ', insumo.nome);
-
-    await Ingrediente.create({
-      idExterno: id,
-      nome: insumo.nome,
-      precoSemana: [precoSemanaToPush],
-    });
+      await Ingrediente.create({
+        idExterno: id,
+        nome: insumo.nome,
+        precoSemana: [precoSemanaToPush],
+      });
+    } catch (err) {
+      console.log(err);
+      process.exit(-1);
+    }
   }
 
   pricesTeste = [

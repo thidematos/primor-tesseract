@@ -15,7 +15,8 @@ router.post(
   pdfController.createSegmentContent,
   semanaController.createSemana,
   ingredienteController.createIngredientes,
-  produtoController.createProduto
+  produtoController.createProduto,
+  ingredienteController.verifyPrices
 );
 
 export default router;

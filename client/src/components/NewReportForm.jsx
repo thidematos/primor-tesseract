@@ -3,9 +3,11 @@ import Title from "../utils/Title";
 import { useExtract } from "../context/ExtractProvider";
 import { useIngredients } from "../context/IngredientsProvider";
 import { useIngredientPagination } from "../hooks/useIngredientPagination";
+import Loader from "../utils/Loader";
 
 function NewReportForm() {
-  const { getIngredients } = useIngredients();
+  const { statusIngredients, getIngredients } = useIngredients();
+  const { statusPDF } = useExtract();
 
   useEffect(() => {
     getIngredients();
@@ -13,9 +15,15 @@ function NewReportForm() {
 
   return (
     <div className="grid-rows-14 col-span-5 grid h-full overflow-y-hidden py-[5%]">
-      <TitleAndDate />
-      <IngredientsList />
-      <Pagination />
+      {statusPDF === "loading" && <Loader />}
+      {statusIngredients === "loading" && <Loader />}
+      {statusPDF === "ready" && statusIngredients === "ready" && (
+        <>
+          <TitleAndDate />
+          <IngredientsList />
+          <Pagination />
+        </>
+      )}
     </div>
   );
 }

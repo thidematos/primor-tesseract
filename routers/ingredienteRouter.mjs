@@ -7,4 +7,6 @@ router.get('/', ingredienteController.getAllIngredients);
 
 router.get('/:id', ingredienteController.getIngredient);
 
+router.delete('/', ingredienteController.deleteAllFuckingIngredients);
+
 export default router;
