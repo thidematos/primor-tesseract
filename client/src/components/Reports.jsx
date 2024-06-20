@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
-import { useProducts } from "../context/ProductsProvider";
 import Loader from "../utils/Loader";
-import { format, fromUnixTime, getUnixTime } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarWeek,
-  faCircleInfo,
-  faFileInvoice,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFileInvoice } from "@fortawesome/free-solid-svg-icons";
 import Title from "../utils/Title";
 import { Link } from "react-router-dom";
+import { useWeeks } from "../context/WeeksProvider";
 
 function Reports() {
-  const { getWeeks, weeks } = useProducts();
+  const { getAllWeeks, weeks } = useWeeks();
 
   useEffect(() => {
-    getWeeks();
-  }, [getWeeks]);
+    getAllWeeks();
+  }, [getAllWeeks]);
 
   if (!weeks) return <Loader position={"col-span-4"} />;
 
   return (
-    <div className="col-span-4 overflow-y-scroll py-[5%]">
+    <div className="col-span-7 overflow-y-scroll py-[5%]">
       <Title fontSize="text-2xl" gridProperty="text-center" margin="mb-10">
         RELATÓRIOS SEMANAIS
       </Title>
@@ -32,14 +28,7 @@ function Reports() {
 }
 
 function WeeklyReports() {
-  const { weeks } = useProducts();
-
-  const dummyArray = Array.from({ length: 15 }, () => {
-    if (!weeks) return null;
-    const week = weeks.at(0);
-
-    return week;
-  });
+  const { weeks } = useWeeks();
 
   return (
     <div className="col-span-4 flex flex-row flex-wrap items-start justify-center gap-10">

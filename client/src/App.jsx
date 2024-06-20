@@ -7,6 +7,7 @@ import Reports from "./components/Reports";
 import { ProductsProvider } from "./context/ProductsProvider";
 import WeeklyReport from "./components/WeeklyReport";
 import GraphsIndex from "./components/GraphsIndex";
+import { WeeksProvider } from "./context/WeeksProvider";
 
 function App() {
   return (
@@ -14,23 +15,29 @@ function App() {
       <BrowserRouter>
         <IngredientsProvider>
           <ExtractProvider>
-            <ProductsProvider>
-              <Routes>
-                <Route path="/overview" element={<Overview />}>
-                  <Route index element={<GraphsIndex />} />
-                  <Route path="relatorios" element={<Reports />} />
-                  <Route
-                    path="relatorios/:semanaId"
-                    element={<WeeklyReport />}
-                  />
-                  <Route
-                    path="produtos"
-                    element={<p className="col-span-4">teste</p>}
-                  />
-                </Route>
-                <Route path="/novo-relatorio" element={<NewReport />} />
-              </Routes>
-            </ProductsProvider>
+            <WeeksProvider>
+              <ProductsProvider>
+                <Routes>
+                  <Route path="/overview" element={<Overview />}>
+                    <Route index element={<GraphsIndex />} />
+                    <Route path="relatorios" element={<Reports />} />
+                    <Route
+                      path="relatorios/:semanaId"
+                      element={<WeeklyReport />}
+                    />
+                    <Route
+                      path="produtos"
+                      element={<p className="col-span-7">teste</p>}
+                    />
+                    <Route
+                      path="ingredientes"
+                      element={<p className="col-span-7">teste ingredientes</p>}
+                    />
+                  </Route>
+                  <Route path="/novo-relatorio" element={<NewReport />} />
+                </Routes>
+              </ProductsProvider>
+            </WeeksProvider>
           </ExtractProvider>
         </IngredientsProvider>
       </BrowserRouter>

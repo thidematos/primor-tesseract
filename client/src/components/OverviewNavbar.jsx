@@ -4,9 +4,8 @@ import Logo from "../utils/Logo";
 function ReportNavbar() {
   return (
     <div className="col-span-2 grid grid-cols-2">
-      <div className="col-span-1"></div>
-      <div className="relative col-span-1 flex flex-col justify-start gap-16 pt-20">
-        <Logo />
+      <div className="relative col-span-2 flex w-full flex-col items-center justify-start gap-16 pt-20">
+        <Logo width="w-[50%]" />
         <Navigation />
       </div>
     </div>
@@ -15,10 +14,10 @@ function ReportNavbar() {
 
 function Navigation() {
   return (
-    <ul className="flex flex-col items-center justify-center gap-10 font-montserrat text-xl">
+    <ul className="flex w-full flex-col items-center justify-center gap-10 font-montserrat text-xl">
       <NavLink
         className={
-          "w-[80%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
         }
         to={"/overview/relatorios"}
       >
@@ -26,7 +25,7 @@ function Navigation() {
       </NavLink>
       <NavLink
         className={
-          "w-[80%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
         }
         to={"/overview/produtos"}
       >
@@ -35,11 +34,19 @@ function Navigation() {
 
       <NavLink
         className={
-          "w-[80%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
         }
-        to={"/"}
+        to={"/overview/ingredientes"}
       >
         INGREDIENTES
+      </NavLink>
+      <NavLink
+        className={
+          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+        }
+        to={"/novo-relatorio"}
+      >
+        NOVO RELATÓRIO
       </NavLink>
     </ul>
   );
