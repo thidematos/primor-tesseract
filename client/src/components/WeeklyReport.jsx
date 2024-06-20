@@ -56,15 +56,10 @@ function Product() {
     (semana) => semana.semana === semanaId,
   );
 
-  const pastWeekInfo =
+  const lastWeekProductInfo =
     actualWeekIndex === 0
       ? null
       : currentProduct.ingredientesSemanais[actualWeekIndex - 1];
-
-  console.log(
-    "Current week que está sendo loopada: ",
-    currentProduct.ingredientesSemanais.at(actualWeekIndex).semana,
-  );
 
   return (
     <div className="markup py-10">
@@ -78,7 +73,9 @@ function Product() {
               <Insumo
                 key={insumo.insumo}
                 insumo={insumo}
-                lastWeekID={pastWeekInfo ? pastWeekInfo.semana : null}
+                lastWeekProduct={
+                  lastWeekProductInfo ? lastWeekProductInfo : null
+                }
               />
             ))}
         </div>
@@ -87,7 +84,7 @@ function Product() {
   );
 }
 
-function Insumo({ insumo, lastWeekID }) {
+function Insumo({ insumo, lastWeekProduct }) {
   const { ingredients, numberToPriceString } = useIngredients();
 
   if (ingredients.length === 0) return null;
@@ -96,38 +93,49 @@ function Insumo({ insumo, lastWeekID }) {
     (ingredient) => ingredient._id === insumo.insumo,
   );
 
-  const priceLastWeek = currentIngredient.precoSemana.find(
-    (semana) => semana.semana._id === lastWeekID,
-  )?.preco;
-  console.log("Last Week id: ", lastWeekID);
-  console.log("Price Last week:", priceLastWeek);
-  console.log("Incoming Macro insumo: ", insumo);
+  const lastWeekIngredientInfo = currentIngredient.precoSemana.find(
+    (semana) => semana.semana._id === lastWeekProduct.semana,
+  );
+
+  const lastWeekUsedWeight = lastWeekProduct.macro.find(
+    (macroEl) => macroEl.insumo === currentIngredient._id,
+  ).qtdBatidaMil;
 
   return (
-    <div className="grid grid-cols-7">
-      <p className="markup col-span-1 text-xs">{currentIngredient.nome}</p>
+    <div className="grid grid-cols-7 py-4">
+      <p className="col-span-1 border-b border-gray-200 text-xs">
+        {currentIngredient.nome}
+      </p>
       {/*LAST WEEK*/}
-      {lastWeekID === null && (
-        <p className="markup col-span-3 text-xs">
+      {lastWeekProduct === null && (
+        <p className="col-span-3 border-b border-gray-200 text-xs">
           Não há dados para a semana anterior.
         </p>
       )}
-      {lastWeekID && (
+      {lastWeekProduct && (
         <>
-          <p className="markup col-span-1 text-xs"> LASTWEEK KG</p>
-          <p className="markup col-span-1 text-xs">
-            {numberToPriceString(priceLastWeek)}
+          <p className="col-span-1 border-b border-gray-200 text-xs">
+            {lastWeekUsedWeight} KG
           </p>
-          <p className="markup col-span-1 text-xs">LASTWEEK KG * R$</p>
+          <p className="col-span-1 border-b border-gray-200 text-xs">
+            {numberToPriceString(lastWeekIngredientInfo.preco)}
+          </p>
+          <p className="col-span-1 border-b border-gray-200 text-xs">
+            {numberToPriceString(
+              lastWeekUsedWeight * lastWeekIngredientInfo.preco,
+            )}
+          </p>
         </>
       )}
 
       {/*CURRENT WEEK*/}
-      <p className="markup col-span-1 text-xs">{insumo.qtdBatidaMil} KG</p>
-      <p className="markup col-span-1 text-xs">
+      <p className="col-span-1 border-b border-gray-200 text-xs">
+        {insumo.qtdBatidaMil} KG
+      </p>
+      <p className="col-span-1 border-b border-gray-200 text-xs">
         {numberToPriceString(insumo.weeklyPreco)}
       </p>
-      <p className="markup col-span-1 text-xs">
+      <p className="col-span-1 border-b border-gray-200 text-xs">
         {numberToPriceString(insumo.qtdBatidaMil * insumo.weeklyPreco)}
       </p>
     </div>
