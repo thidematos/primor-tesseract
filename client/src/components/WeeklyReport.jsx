@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProducts } from "../context/ProductsProvider";
 import Loader from "../utils/Loader";
 import Title from "../utils/Title";
 import { format, getWeek } from "date-fns";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightLong,
@@ -16,11 +16,14 @@ import { useWeeks } from "../context/WeeksProvider";
 
 function WeeklyReport() {
   const { getAllProducts, products } = useProducts();
+
   const { getWeek, currentWeek } = useWeeks();
 
   const { getIngredients, ingredients } = useIngredients();
 
   const { semanaId } = useParams();
+
+  console.log("Re rendered");
 
   useEffect(() => {
     getAllProducts();
@@ -32,7 +35,7 @@ function WeeklyReport() {
     return <Loader position={"col-span-7"} />;
 
   return (
-    <div className="col-span-7 h-full py-10">
+    <div className="col-span-6 h-full py-10">
       <Header />
       <Product />
     </div>
@@ -66,19 +69,26 @@ function Header() {
 }
 
 function Product() {
-  const {
-    currentPage,
-    setCurrentPage,
-    isLimit,
-    isMinimum,
-    currentPageZeroBased,
-  } = useProductPagination();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { sortedProducts } = useProducts();
 
   const { semanaId } = useParams();
 
-  const currentProduct = sortedProducts[currentPageZeroBased];
+  const currentProductQuery = searchParams.get("produto");
+
+  console.log(currentProductQuery);
+
+  useEffect(() => {
+    if (!sortedProducts.length || currentProductQuery) return;
+
+    setSearchParams(`produto=${sortedProducts[0].idExterno}`);
+  }, [sortedProducts, currentProductQuery, setSearchParams]);
+
+  const currentProduct =
+    sortedProducts.find(
+      (produto) => produto.idExterno === Number(currentProductQuery),
+    ) || sortedProducts[0];
 
   const actualWeekIndex = currentProduct.ingredientesSemanais.findIndex(
     (semana) => semana.semana === semanaId,
@@ -95,10 +105,12 @@ function Product() {
     <div className="w-full text-center">
       <Title margin="mt-5">{currentProduct.nome}</Title>
 
-      <div className="flex w-full flex-col items-center justify-center overflow-y-scroll font-noto text-gray-800">
+      <div className="flex max-h-[700px] w-full flex-col items-center justify-start overflow-y-scroll font-noto text-gray-800">
         {actualWeek.macro.length > 0 && (
           <>
-            <p className="w-full py-5">MACRO</p>
+            <p className="w-full border-b border-gray-300 py-5 text-lg">
+              MACRO
+            </p>
             {actualWeek.macro?.map((insumo) => (
               <Insumo
                 key={insumo.insumo}
@@ -114,7 +126,9 @@ function Product() {
 
         {actualWeek.micro.length > 0 && (
           <>
-            <p className="w-full py-5">MICRO</p>
+            <p className="w-full border-b border-gray-300 py-5 text-lg">
+              MICRO
+            </p>
             {actualWeek.micro.map((insumo) => (
               <Insumo
                 key={insumo.insumo}
@@ -130,7 +144,9 @@ function Product() {
 
         {actualWeek.outros.length > 0 && (
           <>
-            <p className="w-full py-5">OUTROS</p>
+            <p className="w-full border-b border-gray-300 py-5 text-lg">
+              OUTROS
+            </p>
             {actualWeek.outros.map((insumo) => (
               <Insumo
                 key={insumo.insumo}
@@ -161,9 +177,10 @@ function Insumo({ insumo, lastWeekProduct, type }) {
     (semana) => semana.semana._id === lastWeekProduct?.semana,
   );
 
-  const lastWeekUsedWeight = lastWeekProduct?.[type].find(
-    (macroEl) => macroEl.insumo === currentIngredient._id,
-  ).qtdBatidaMil;
+  const lastWeekUsedWeight =
+    lastWeekProduct?.[type].find(
+      (macroEl) => macroEl.insumo === currentIngredient._id,
+    )?.qtdBatidaMil || " - ";
 
   return (
     <div className="grid w-full grid-cols-7 items-center border-b border-gray-300 py-4">
@@ -180,7 +197,7 @@ function Insumo({ insumo, lastWeekProduct, type }) {
           <p className="col-span-1 text-base">
             {numberToPriceString(lastWeekIngredientInfo.preco)}
           </p>
-          <p className="col-span-1 text-base">
+          <p className="col-span-1 border-r border-gray-400 text-base">
             {numberToPriceString(
               lastWeekUsedWeight * lastWeekIngredientInfo.preco,
             )}
