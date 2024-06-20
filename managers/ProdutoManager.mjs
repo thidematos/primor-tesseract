@@ -63,6 +63,7 @@ class ProdutoManager {
 
   async createProduto(produto) {
     try {
+      //Tenho acesso à semana ID pelo this.semana
       const allIngredients = await this.getAllIngredientes();
       console.log('Náo quero ver: createProduto');
       const newProduto = await Produto.create({
@@ -111,9 +112,20 @@ class ProdutoManager {
         (insumo) => insumo.idExterno === id
       );
 
+      console.log('Hey! Found ingredient: ', foundIngredient);
+
+      console.log(
+        'Hey! Current week: ',
+        foundIngredient.precoSemana.find(
+          (el) => String(el.semana) === String(this.semana)
+        ).preco
+      );
+
       return {
         insumo: foundIngredient._id,
-        weeklyPreco: foundIngredient.precoSemana.at(-1).preco,
+        weeklyPreco: foundIngredient.precoSemana.find(
+          (el) => String(el.semana) === String(this.semana)
+        ).preco,
         quantidade: ingredient.qtd,
         qtdBatidaMil: this.#calculateWeightProportion(batida, ingredient.qtd),
       };

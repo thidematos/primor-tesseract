@@ -51,8 +51,8 @@ function ExtractProvider({ children }) {
 
   const navigate = useNavigate();
 
-  const { precos, week } = useIngredients();
-  /*
+  //const { precos, week } = useIngredients();
+
   const { week } = useIngredients();
   const precos = [
     {
@@ -300,7 +300,253 @@ function ExtractProvider({ children }) {
       preco: "0.1",
     },
   ];
-  */
+
+  const precosSecondReportTeste = [
+    {
+      idExterno: 31,
+      preco: "4",
+    },
+    {
+      idExterno: 1,
+      preco: "157",
+    },
+    {
+      idExterno: 102,
+      preco: "1",
+    },
+    {
+      idExterno: 124,
+      preco: "7",
+    },
+    {
+      idExterno: 115,
+      preco: "5",
+    },
+    {
+      idExterno: 257,
+      preco: "23",
+    },
+    {
+      idExterno: 4,
+      preco: "308",
+    },
+    {
+      idExterno: 141,
+      preco: "9",
+    },
+    {
+      idExterno: 395,
+      preco: "7",
+    },
+    {
+      idExterno: 61,
+      preco: "8",
+    },
+    {
+      idExterno: 13,
+      preco: "19",
+    },
+    {
+      idExterno: 261,
+      preco: "4",
+    },
+    {
+      idExterno: 16,
+      preco: "2",
+    },
+    {
+      idExterno: 262,
+      preco: "5",
+    },
+    {
+      idExterno: 45,
+      preco: "6",
+    },
+    {
+      idExterno: 276,
+      preco: "7",
+    },
+    {
+      idExterno: 190,
+      preco: "9",
+    },
+    {
+      idExterno: 104,
+      preco: "2",
+    },
+    {
+      idExterno: 149,
+      preco: "1",
+    },
+    {
+      idExterno: 192,
+      preco: "1",
+    },
+    {
+      idExterno: 162,
+      preco: "4",
+    },
+    {
+      idExterno: 287,
+      preco: "1",
+    },
+    {
+      idExterno: 279,
+      preco: "9",
+    },
+    {
+      idExterno: 114,
+      preco: "4",
+    },
+    {
+      idExterno: 289,
+      preco: "3",
+    },
+    {
+      idExterno: 131,
+      preco: "8",
+    },
+    {
+      idExterno: 2283,
+      preco: "4",
+    },
+    {
+      idExterno: 277,
+      preco: "8",
+    },
+    {
+      idExterno: 43,
+      preco: "5",
+    },
+    {
+      idExterno: 19,
+      preco: "3",
+    },
+    {
+      idExterno: 2290,
+      preco: "5",
+    },
+    {
+      idExterno: 288,
+      preco: "2",
+    },
+    {
+      idExterno: 2291,
+      preco: "6",
+    },
+    {
+      idExterno: 313,
+      preco: "6",
+    },
+    {
+      idExterno: 317,
+      preco: "1",
+    },
+    {
+      idExterno: 312,
+      preco: "5",
+    },
+    {
+      idExterno: 316,
+      preco: "9",
+    },
+    {
+      idExterno: 119,
+      preco: "6",
+    },
+    {
+      idExterno: 394,
+      preco: "6",
+    },
+    {
+      idExterno: 402,
+      preco: "1",
+    },
+    {
+      idExterno: 171,
+      preco: "5",
+    },
+    {
+      idExterno: 403,
+      preco: "2",
+    },
+    {
+      idExterno: 315,
+      preco: "8",
+    },
+    {
+      idExterno: 275,
+      preco: "6",
+    },
+    {
+      idExterno: 392,
+      preco: "4",
+    },
+    {
+      idExterno: 401,
+      preco: "9",
+    },
+    {
+      idExterno: 64,
+      preco: "9",
+    },
+    {
+      idExterno: 112,
+      preco: "3",
+    },
+    {
+      idExterno: 49,
+      preco: "7",
+    },
+    {
+      idExterno: 400,
+      preco: "8",
+    },
+    {
+      idExterno: 161,
+      preco: "3",
+    },
+    {
+      idExterno: 391,
+      preco: "3",
+    },
+    {
+      idExterno: 390,
+      preco: "52",
+    },
+    {
+      idExterno: 158,
+      preco: "2",
+    },
+    {
+      idExterno: 298,
+      preco: "4",
+    },
+    {
+      idExterno: 410,
+      preco: "3",
+    },
+    {
+      idExterno: 179,
+      preco: "8",
+    },
+    {
+      idExterno: 172,
+      preco: "6",
+    },
+    {
+      idExterno: 173,
+      preco: "7",
+    },
+    {
+      idExterno: 314,
+      preco: "7",
+    },
+    {
+      idExterno: 393,
+      preco: "5",
+    },
+  ];
 
   async function extractPDFData(...file) {
     dispatch({ type: "uploaded/loading", payload: file });
@@ -314,13 +560,13 @@ function ExtractProvider({ children }) {
 
     console.log(precos);
     form.append("week", JSON.stringify(week));
-    form.append("precos", JSON.stringify(precos));
+    form.append("precos", JSON.stringify(precosSecondReportTeste));
 
     const res = await axios.post("api/v1/extract/extractPDF", form);
 
     dispatch({ type: "extractedPDF/loaded", payload: res.data.data.pdfData });
 
-    navigate("/relatorio-overview");
+    navigate("/overview/relatorios");
   }
 
   return (

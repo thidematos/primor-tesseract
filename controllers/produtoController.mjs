@@ -23,7 +23,12 @@ const createProduto = catchAsync(async (req, res, next) => {
 
   await Promise.all(filesDataPromises);
 
-  next();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      pdfData: filesData,
+    },
+  });
 });
 
 const getAllProdutos = catchAsync(async (req, res, next) => {

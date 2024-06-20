@@ -94,8 +94,6 @@ const deleteAllFuckingIngredients = catchAsync(async (req, res, next) => {
 });
 
 const verifyPrices = catchAsync(async (req, res, next) => {
-  const filesData = req.filesData;
-
   const precos = JSON.parse(req.body.precos);
 
   const ingredients = await Ingrediente.find({}).select(
@@ -118,12 +116,7 @@ const verifyPrices = catchAsync(async (req, res, next) => {
 
   await Promise.all(ingredientsPromise);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      pdfData: filesData,
-    },
-  });
+  next();
 });
 
 export {
