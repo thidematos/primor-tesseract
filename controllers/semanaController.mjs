@@ -43,7 +43,6 @@ const getAllSemana = catchAsync(async (req, res, next) => {
 });
 
 const getSemana = catchAsync(async (req, res, next) => {
-  //Need some work on.
   const semana = await Semana.findById(req.params.id);
 
   res.status(200).json({
@@ -55,18 +54,12 @@ const getSemana = catchAsync(async (req, res, next) => {
 });
 
 const getWeekPdfs = catchAsync(async (req, res, next) => {
+  //Need some work on.
   const week = await Semana.findById(req.params.id);
 
-  const buffer = fs.readFileSync(`./pdf/${week.pdf[0]}`, { encoding: 'utf-8' });
+  const pdf = req.query.pdf;
 
-  console.log(buffer);
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      buffer: buffer,
-    },
-  });
+  res.download(`./pdf/${week.pdf[Number(pdf) - 1]}`);
 });
 
 const emptyPdfFoler = catchAsync(async (req, res, next) => {

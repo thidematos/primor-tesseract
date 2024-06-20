@@ -18,8 +18,8 @@ function NewReportForm() {
 
   useEffect(() => {
     function handler(e) {
-      if (e.code !== "Enter") return;
-      console.log(e);
+      if (e.code !== "Enter" && e.code !== "NumpadEnter") return;
+
       currentInput.setter((state) => {
         return state !== ingredientsSorted.length - 1 ? state + 1 : 0;
       });
@@ -192,7 +192,7 @@ function InsumoNewPrice({ ingredient }) {
     )
       return;
 
-    inputRef.current.focus({ preventScroll: true });
+    inputRef.current.focus();
   });
 
   return (

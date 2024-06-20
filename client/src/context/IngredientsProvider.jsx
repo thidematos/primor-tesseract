@@ -98,6 +98,10 @@ function IngredientsProvider({ children }) {
     [precos],
   );
 
+  const numberToPriceString = useCallback((number) => {
+    return `R$ ${String(number.toFixed(3)).replace(".", ",")}`;
+  }, []);
+
   const handleChangePreco = useCallback((currentIngredient, value) => {
     dispatch({
       type: "changeOnPreco",
@@ -119,6 +123,7 @@ function IngredientsProvider({ children }) {
         precos,
         getPreco,
         handleChangePreco,
+        numberToPriceString,
         week,
         currentInput: {
           state: currentInput,

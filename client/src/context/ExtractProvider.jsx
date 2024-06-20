@@ -51,8 +51,8 @@ function ExtractProvider({ children }) {
 
   const navigate = useNavigate();
 
-  //const { precos, week } = useIngredients();
-
+  const { precos, week } = useIngredients();
+  /*
   const { week } = useIngredients();
   const precos = [
     {
@@ -300,6 +300,7 @@ function ExtractProvider({ children }) {
       preco: "0.1",
     },
   ];
+  */
 
   async function extractPDFData(...file) {
     dispatch({ type: "uploaded/loading", payload: file });
@@ -311,6 +312,7 @@ function ExtractProvider({ children }) {
       form.append("pdf", file);
     });
 
+    console.log(precos);
     form.append("week", JSON.stringify(week));
     form.append("precos", JSON.stringify(precos));
 
