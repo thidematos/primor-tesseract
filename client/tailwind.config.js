@@ -7,6 +7,9 @@ export default {
         noto: "Noto Serif",
         montserrat: "Montserrat",
       },
+      colors: {
+        related: "#B16A53",
+      },
     },
   },
   plugins: [],

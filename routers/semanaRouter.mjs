@@ -8,4 +8,8 @@ router
   .get(semanaController.getAllSemana)
   .delete(semanaController.emptyPdfFoler);
 
+router.route('/:id').get(semanaController.getSemana);
+
+router.get('/weekPdfs/:id', semanaController.getWeekPdfs);
+
 export default router;

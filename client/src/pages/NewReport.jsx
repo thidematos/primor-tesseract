@@ -1,7 +1,5 @@
 import NewReportForm from "../components/NewReportForm";
 import SubmitPDF from "../components/SubmitPDF";
-import { useExtract } from "../context/ExtractProvider";
-import { useIngredients } from "../context/IngredientsProvider";
 
 function NewReport() {
   return (

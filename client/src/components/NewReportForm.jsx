@@ -68,16 +68,23 @@ function NewReportForm() {
 function TitleAndDate() {
   const { dispatch } = useIngredients();
 
+  function dateParser(dateString) {
+    const [year, month, day] = dateString.split("-");
+
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  }
+
   return (
     <div className="row-span-1 flex flex-row items-center justify-evenly pb-6 text-center">
       <Title fontSize="text-2xl">RELATÓRIO SEMANAL</Title>
+
       <input
         type="date"
         onChange={(e) =>
           dispatch({
             type: "changeOnWeek",
             payload: {
-              start: new Date(e.target.value),
+              start: dateParser(e.target.value),
             },
           })
         }
@@ -88,7 +95,7 @@ function TitleAndDate() {
           dispatch({
             type: "changeOnWeek",
             payload: {
-              end: new Date(e.target.value),
+              end: dateParser(e.target.value),
             },
           })
         }

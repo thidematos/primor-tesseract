@@ -18,7 +18,7 @@
 }
 
 .active {
-  @apply text-xl text-blue-500;
+  @apply text-xl text-blue-500 underline underline-offset-4;
 }
 
 .markup {

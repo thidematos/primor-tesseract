@@ -6,6 +6,10 @@ const semanaSchema = new mongoose.Schema({
     fim: Date,
   },
   pdf: [String],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Semana = mongoose.model('Semana', semanaSchema);

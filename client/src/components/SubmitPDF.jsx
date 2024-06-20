@@ -70,7 +70,9 @@ function Instructions() {
       <li className="drop-shadow-sm">
         <span className="text-red-600">Defina os preços</span> dos insumos
       </li>
-      <li>Selecione o intervalo de tempo válido desse relatório</li>
+      <li className="drop-shadow-sm">
+        Selecione o intervalo de tempo válido desse relatório
+      </li>
       <li className="drop-shadow-sm">
         Faça o <span className="text-red-600">upload do PDF</span> com o
         relatório semanal

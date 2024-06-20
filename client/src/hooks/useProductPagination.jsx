@@ -1,14 +1,15 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useExtract } from "../context/ExtractProvider";
+import { useProducts } from "../context/ProductsProvider";
 
-function useCurrentPage() {
+function useProductPagination() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { pdfTotalPages } = useExtract();
+  const { products } = useProducts();
 
-  const currentPage = Number(searchParams.get("page"));
+  const currentPage = Number(searchParams.get("page")) || 1;
 
-  const isLimit = currentPage === pdfTotalPages;
+  const isLimit = currentPage === products.length;
   const isMinimum = currentPage === 1;
 
   const setCurrentPage = useCallback(
@@ -27,4 +28,4 @@ function useCurrentPage() {
   };
 }
 
-export { useCurrentPage };
+export { useProductPagination };
