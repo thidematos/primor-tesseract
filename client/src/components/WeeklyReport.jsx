@@ -23,8 +23,6 @@ function WeeklyReport() {
 
   const { semanaId } = useParams();
 
-  console.log("Re rendered");
-
   useEffect(() => {
     getAllProducts();
     getWeek(semanaId);
@@ -71,13 +69,11 @@ function Header() {
 function Product() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { sortedProducts } = useProducts();
+  const { sortedProducts, createSegment } = useProducts();
 
   const { semanaId } = useParams();
 
   const currentProductQuery = searchParams.get("produto");
-
-  console.log(currentProductQuery);
 
   useEffect(() => {
     if (!sortedProducts.length || currentProductQuery) return;
@@ -99,119 +95,184 @@ function Product() {
       ? null
       : currentProduct.ingredientesSemanais[actualWeekIndex - 1];
 
-  const actualWeek = currentProduct.ingredientesSemanais.at(actualWeekIndex);
+  const actualWeekProductInfo =
+    currentProduct.ingredientesSemanais.at(actualWeekIndex);
+
+  const macros = createSegment(
+    "macro",
+    lastWeekProductInfo,
+    actualWeekProductInfo,
+  );
+
+  const micros = createSegment(
+    "micro",
+    lastWeekProductInfo,
+    actualWeekProductInfo,
+  );
+
+  const outros = createSegment(
+    "outros",
+    lastWeekProductInfo,
+    actualWeekProductInfo,
+  );
 
   return (
     <div className="w-full text-center">
       <Title margin="mt-5">{currentProduct.nome}</Title>
 
-      <div className="flex max-h-[700px] w-full flex-col items-center justify-start overflow-y-scroll font-noto text-gray-800">
-        {actualWeek.macro.length > 0 && (
-          <>
-            <p className="w-full border-b border-gray-300 py-5 text-lg">
-              MACRO
-            </p>
-            {actualWeek.macro?.map((insumo) => (
-              <Insumo
-                key={insumo.insumo}
-                insumo={insumo}
-                type={"macro"}
-                lastWeekProduct={
-                  lastWeekProductInfo ? lastWeekProductInfo : null
-                }
-              />
-            ))}
-          </>
-        )}
+      <div className="grid h-[700px] w-full grid-flow-row auto-rows-min overflow-y-scroll font-noto text-gray-800">
+        <TableHeader
+          lastWeek={lastWeekProductInfo}
+          actualWeek={actualWeekProductInfo}
+        />
+        <p className="row-span-1 border-b border-gray-300 py-5">MACRO</p>
 
-        {actualWeek.micro.length > 0 && (
-          <>
-            <p className="w-full border-b border-gray-300 py-5 text-lg">
-              MICRO
-            </p>
-            {actualWeek.micro.map((insumo) => (
-              <Insumo
-                key={insumo.insumo}
-                insumo={insumo}
-                type={"micro"}
-                lastWeekProduct={
-                  lastWeekProductInfo ? lastWeekProductInfo : null
-                }
-              />
-            ))}
-          </>
-        )}
+        {macros.map((macroInsumo) => (
+          <Insumo
+            key={macroInsumo.insumo}
+            insumo={macroInsumo}
+            lastWeek={lastWeekProductInfo?.macro}
+            actualWeek={actualWeekProductInfo.macro}
+          />
+        ))}
 
-        {actualWeek.outros.length > 0 && (
-          <>
-            <p className="w-full border-b border-gray-300 py-5 text-lg">
-              OUTROS
-            </p>
-            {actualWeek.outros.map((insumo) => (
-              <Insumo
-                key={insumo.insumo}
-                insumo={insumo}
-                type={"outros"}
-                lastWeekProduct={
-                  lastWeekProductInfo ? lastWeekProductInfo : null
-                }
-              />
-            ))}
-          </>
-        )}
+        <p className="row-span-1 border-b border-gray-300 py-5">MICRO</p>
+        {micros.map((microInsumo) => (
+          <Insumo
+            key={microInsumo.insumo}
+            insumo={microInsumo}
+            lastWeek={lastWeekProductInfo?.micro}
+            actualWeek={actualWeekProductInfo.micro}
+          />
+        ))}
+        <p className="row-span-1 border-b border-gray-300 py-5">OUTROS</p>
+        {outros.map((outroInsumo) => (
+          <Insumo
+            key={outroInsumo.insumo}
+            insumo={outroInsumo}
+            lastWeek={lastWeekProductInfo?.outros}
+            actualWeek={actualWeekProductInfo.outros}
+          />
+        ))}
       </div>
     </div>
   );
 }
 
-function Insumo({ insumo, lastWeekProduct, type }) {
-  const { ingredients, numberToPriceString } = useIngredients();
+function TableHeader({ lastWeek, actualWeek }) {
+  const { getWeek, lastWeek: lastWeekData } = useWeeks();
+  const { products } = useProducts();
 
-  if (ingredients.length === 0) return null;
+  const { numberToPriceString } = useIngredients();
 
-  const currentIngredient = ingredients.find(
-    (ingredient) => ingredient._id === insumo.insumo,
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (lastWeek) getWeek(lastWeek.semana, true);
+  }, [getWeek, lastWeek]);
+
+  if (!products) return null;
+
+  const currentProduct = products.find(
+    (el) => el.idExterno === Number(searchParams.get("produto")),
   );
 
-  const lastWeekIngredientInfo = currentIngredient.precoSemana.find(
-    (semana) => semana.semana._id === lastWeekProduct?.semana,
+  const totalLastWeek = currentProduct?.precosTotalSemanal.find(
+    (el) => el.semana === lastWeek?.semana,
   );
 
-  const lastWeekUsedWeight =
-    lastWeekProduct?.[type].find(
-      (macroEl) => macroEl.insumo === currentIngredient._id,
-    )?.qtdBatidaMil || " - ";
+  const totalActualWeek = currentProduct?.precosTotalSemanal.find(
+    (el) => el.semana === actualWeek.semana,
+  );
+
+  console.log(totalLastWeek);
+  console.log(totalActualWeek);
 
   return (
-    <div className="grid w-full grid-cols-7 items-center border-b border-gray-300 py-4">
-      <p className="col-span-1 text-base">{currentIngredient.nome}</p>
-      {/*LAST WEEK*/}
-      {lastWeekProduct === null && (
-        <p className="col-span-3 text-base">
-          Não há dados para a semana anterior.
+    <>
+      <div className="row-span-1 grid grid-cols-7 content-center items-center justify-center border-b border-gray-300 py-10">
+        <p className="col-span-1"></p>
+        <p className="col-span-2 text-sm tracking-wider">
+          {lastWeekData &&
+            `De ${format(lastWeekData.intervalo.inicio, "dd/MM/yyyy")} à ${format(lastWeekData.intervalo.fim, "dd/MM/yyyy")}:`}
         </p>
-      )}
-      {lastWeekProduct && (
+        <p className="col-span-1 text-xl text-blue-500">
+          {totalLastWeek && numberToPriceString(totalLastWeek.precoTotal)}
+        </p>
+        <p className="col-span-2 text-sm">Semana atual:</p>
+        <p className="col-span-1 text-xl text-blue-500">
+          {totalActualWeek && numberToPriceString(totalActualWeek.precoTotal)}
+        </p>
+      </div>
+      <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5">
+        <p>NOME</p>
+        <p>QUANTIDADE</p>
+        <p>PREÇO</p>
+        <p>TOTAL</p>
+        <p>QUANTIDADE</p>
+        <p>PREÇO</p>
+        <p>TOTAL</p>
+      </div>
+    </>
+  );
+}
+
+function Insumo({ insumo, lastWeek, actualWeek }) {
+  const { ingredients, numberToPriceString } = useIngredients();
+
+  const currentInsumo = ingredients.find((el) => el._id === insumo.insumo);
+
+  const currentInsumoOnActualWeek = actualWeek.find(
+    (el) => el.insumo === currentInsumo._id,
+  );
+
+  const currentInsumoOnLastWeek = lastWeek?.find(
+    (el) => el.insumo === currentInsumo._id,
+  );
+
+  return (
+    <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5">
+      <p className="col-span-1 self-center">{currentInsumo.nome}</p>
+      {lastWeek && (
         <>
-          <p className="col-span-1 text-base">{lastWeekUsedWeight} KG</p>
-          <p className="col-span-1 text-base">
-            {numberToPriceString(lastWeekIngredientInfo.preco)}
+          <p className="col-span-1 self-center">
+            {currentInsumoOnLastWeek
+              ? `${currentInsumoOnLastWeek.qtdBatidaMil} KG`
+              : "---"}
           </p>
-          <p className="col-span-1 border-r border-gray-400 text-base">
-            {numberToPriceString(
-              lastWeekUsedWeight * lastWeekIngredientInfo.preco,
-            )}
+          <p className="col-span-1 self-center">
+            {currentInsumoOnLastWeek
+              ? numberToPriceString(currentInsumoOnLastWeek.weeklyPreco)
+              : "---"}
+          </p>
+          <p className="col-span-1 self-center text-red-600">
+            {currentInsumoOnLastWeek
+              ? numberToPriceString(
+                  currentInsumoOnLastWeek.weeklyPreco *
+                    currentInsumoOnLastWeek.qtdBatidaMil,
+                )
+              : "---"}
           </p>
         </>
       )}
-
-      {/*CURRENT WEEK*/}
-      <p className="col-span-1 text-base">{insumo.qtdBatidaMil} KG</p>
-      <p className="col-span-1 text-base">
-        {numberToPriceString(insumo.weeklyPreco)}
+      {!lastWeek && <p className="col-span-3 self-center">Sem informações</p>}
+      <p className="col-span-1 self-center">
+        {currentInsumoOnActualWeek?.qtdBatidaMil
+          ? `${currentInsumoOnActualWeek.qtdBatidaMil} KG`
+          : "---"}
       </p>
-      <p className="col-span-1 text-base">
-        {numberToPriceString(insumo.qtdBatidaMil * insumo.weeklyPreco)}
+      <p className="col-span-1 self-center">
+        {currentInsumoOnActualWeek?.weeklyPreco
+          ? numberToPriceString(currentInsumoOnActualWeek.weeklyPreco)
+          : "---"}
+      </p>
+      <p className="col-span-1 self-center text-red-600">
+        {currentInsumoOnActualWeek
+          ? numberToPriceString(
+              currentInsumoOnActualWeek.weeklyPreco *
+                currentInsumoOnActualWeek.qtdBatidaMil,
+            )
+          : "---"}
       </p>
     </div>
   );

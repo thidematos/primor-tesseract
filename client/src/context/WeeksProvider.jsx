@@ -15,6 +15,7 @@ const initials = {
   currentWeek: null,
   status: "",
   download: false,
+  lastWeek: null,
 };
 
 function reducer(state, action) {
@@ -39,6 +40,13 @@ function reducer(state, action) {
         currentWeek: action.payload,
       };
 
+    case "fetchedLastWeek/loaded":
+      return {
+        ...state,
+        status: "ready",
+        lastWeek: action.payload,
+      };
+
     case "download":
       return {
         ...state,
@@ -51,10 +59,8 @@ function reducer(state, action) {
 }
 
 function WeeksProvider({ children }) {
-  const [{ weeks, status, currentWeek, download }, dispatch] = useReducer(
-    reducer,
-    initials,
-  );
+  const [{ weeks, status, currentWeek, download, lastWeek }, dispatch] =
+    useReducer(reducer, initials);
 
   const getAllWeeks = useCallback(async () => {
     dispatch({ type: "fetching/loading" });
@@ -64,10 +70,17 @@ function WeeksProvider({ children }) {
     dispatch({ type: "fetchedAllWeeks/loaded", payload: res.data.data.semana });
   }, []);
 
-  const getWeek = useCallback(async (id) => {
+  const getWeek = useCallback(async (id, lastWeek = false) => {
     dispatch({ type: "fetching/loading" });
 
     const res = await axios.get(`/api/v1/semanas/${id}`);
+
+    if (lastWeek) {
+      return dispatch({
+        type: "fetchedLastWeek/loaded",
+        payload: res.data.data.semana,
+      });
+    }
 
     dispatch({
       type: "fetchedCurrentWeek/loaded",
@@ -112,6 +125,7 @@ function WeeksProvider({ children }) {
         weeks,
         status,
         currentWeek,
+        lastWeek,
         download,
         dispatch,
         getWeekPdfs,

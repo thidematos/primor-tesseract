@@ -46,6 +46,20 @@ function ProductsProvider({ children }) {
     ?.slice()
     .sort((a, b) => a.idExterno - b.idExterno);
 
+  const createSegment = useCallback((type, lastWeekArray, actualWeekArray) => {
+    const usedId = [];
+    return (
+      lastWeekArray?.[type]
+        .map((el) => {
+          usedId.push(el.insumo);
+          return el;
+        })
+        .concat(
+          ...actualWeekArray[type].filter((el) => !usedId.includes(el.insumo)),
+        ) || actualWeekArray[type]
+    );
+  }, []);
+
   return (
     <ProductContext.Provider
       value={{
@@ -54,6 +68,7 @@ function ProductsProvider({ children }) {
         status,
         dispatch,
         getAllProducts,
+        createSegment,
       }}
     >
       {children}
