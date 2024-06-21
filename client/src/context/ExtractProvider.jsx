@@ -52,7 +52,6 @@ function ExtractProvider({ children }) {
   const navigate = useNavigate();
 
   const { precos, week } = useIngredients();
-
   /*
   const { week } = useIngredients();
   const precos = [
@@ -305,247 +304,247 @@ function ExtractProvider({ children }) {
   const precosSecondReportTeste = [
     {
       idExterno: 31,
-      preco: "4",
-    },
-    {
-      idExterno: 1,
-      preco: "157",
+      preco: "0.752",
     },
     {
       idExterno: 102,
-      preco: "1",
+      preco: 1.35,
+    },
+    {
+      idExterno: 1,
+      preco: 1,
     },
     {
       idExterno: 124,
-      preco: "7",
+      preco: 0.4,
     },
     {
       idExterno: 115,
-      preco: "5",
+      preco: "2.6",
     },
     {
       idExterno: 257,
-      preco: "23",
-    },
-    {
-      idExterno: 4,
-      preco: "308",
+      preco: 5.3,
     },
     {
       idExterno: 141,
-      preco: "9",
+      preco: "0.63",
     },
     {
       idExterno: 395,
-      preco: "7",
+      preco: 21.026,
+    },
+    {
+      idExterno: 4,
+      preco: 1.07,
     },
     {
       idExterno: 61,
-      preco: "8",
-    },
-    {
-      idExterno: 13,
-      preco: "19",
+      preco: 1.015,
     },
     {
       idExterno: 261,
-      preco: "4",
+      preco: 6.4,
     },
     {
-      idExterno: 16,
-      preco: "2",
-    },
-    {
-      idExterno: 262,
-      preco: "5",
+      idExterno: 13,
+      preco: "2.265",
     },
     {
       idExterno: 45,
-      preco: "6",
+      preco: 1.02,
+    },
+    {
+      idExterno: 262,
+      preco: "9",
+    },
+    {
+      idExterno: 16,
+      preco: 0.81,
     },
     {
       idExterno: 276,
-      preco: "7",
+      preco: 8,
     },
     {
       idExterno: 190,
-      preco: "9",
+      preco: 1.05,
     },
     {
       idExterno: 104,
-      preco: "2",
-    },
-    {
-      idExterno: 149,
-      preco: "1",
-    },
-    {
-      idExterno: 192,
-      preco: "1",
-    },
-    {
-      idExterno: 162,
-      preco: "4",
-    },
-    {
-      idExterno: 287,
-      preco: "1",
-    },
-    {
-      idExterno: 279,
-      preco: "9",
-    },
-    {
-      idExterno: 114,
-      preco: "4",
-    },
-    {
-      idExterno: 289,
-      preco: "3",
-    },
-    {
-      idExterno: 131,
-      preco: "8",
-    },
-    {
-      idExterno: 2283,
-      preco: "4",
-    },
-    {
-      idExterno: 277,
-      preco: "8",
-    },
-    {
-      idExterno: 43,
-      preco: "5",
-    },
-    {
-      idExterno: 19,
-      preco: "3",
-    },
-    {
-      idExterno: 2290,
-      preco: "5",
-    },
-    {
-      idExterno: 288,
-      preco: "2",
-    },
-    {
-      idExterno: 2291,
-      preco: "6",
-    },
-    {
-      idExterno: 313,
-      preco: "6",
-    },
-    {
-      idExterno: 317,
-      preco: "1",
-    },
-    {
-      idExterno: 312,
-      preco: "5",
-    },
-    {
-      idExterno: 316,
-      preco: "9",
-    },
-    {
-      idExterno: 119,
-      preco: "6",
-    },
-    {
-      idExterno: 394,
-      preco: "6",
-    },
-    {
-      idExterno: 402,
-      preco: "1",
-    },
-    {
-      idExterno: 171,
-      preco: "5",
-    },
-    {
-      idExterno: 403,
-      preco: "2",
-    },
-    {
-      idExterno: 315,
-      preco: "8",
+      preco: 1.75,
     },
     {
       idExterno: 275,
-      preco: "6",
-    },
-    {
-      idExterno: 392,
-      preco: "4",
-    },
-    {
-      idExterno: 401,
-      preco: "9",
-    },
-    {
-      idExterno: 64,
-      preco: "9",
-    },
-    {
-      idExterno: 112,
-      preco: "3",
-    },
-    {
-      idExterno: 49,
-      preco: "7",
-    },
-    {
-      idExterno: 400,
-      preco: "8",
+      preco: 9.75,
     },
     {
       idExterno: 161,
-      preco: "3",
+      preco: 14.7,
     },
     {
-      idExterno: 391,
-      preco: "3",
+      idExterno: 162,
+      preco: 14.65,
     },
     {
-      idExterno: 390,
-      preco: "52",
+      idExterno: 279,
+      preco: 4.2,
     },
     {
-      idExterno: 158,
-      preco: "2",
+      idExterno: 287,
+      preco: "0",
     },
     {
-      idExterno: 298,
-      preco: "4",
+      idExterno: 114,
+      preco: 5,
     },
     {
-      idExterno: 410,
-      preco: "3",
+      idExterno: 192,
+      preco: 1.78,
     },
     {
-      idExterno: 179,
-      preco: "8",
+      idExterno: 149,
+      preco: 0.332,
     },
     {
-      idExterno: 172,
-      preco: "6",
+      idExterno: 289,
+      preco: 4.4,
     },
     {
-      idExterno: 173,
-      preco: "7",
+      idExterno: 277,
+      preco: "0.1",
+    },
+    {
+      idExterno: 43,
+      preco: 1.215,
+    },
+    {
+      idExterno: 288,
+      preco: 9.5,
+    },
+    {
+      idExterno: 19,
+      preco: 1.14,
+    },
+    {
+      idExterno: 2290,
+      preco: "0.1",
+    },
+    {
+      idExterno: 2291,
+      preco: "0.1",
+    },
+    {
+      idExterno: 313,
+      preco: 40,
+    },
+    {
+      idExterno: 316,
+      preco: 58,
+    },
+    {
+      idExterno: 119,
+      preco: 5,
+    },
+    {
+      idExterno: 317,
+      preco: 100,
+    },
+    {
+      idExterno: 394,
+      preco: 17.97,
+    },
+    {
+      idExterno: 402,
+      preco: "28",
+    },
+    {
+      idExterno: 403,
+      preco: 83.012,
+    },
+    {
+      idExterno: 171,
+      preco: 4.85,
+    },
+    {
+      idExterno: 315,
+      preco: 40,
     },
     {
       idExterno: 314,
-      preco: "7",
+      preco: 55,
+    },
+    {
+      idExterno: 392,
+      preco: 20.25,
+    },
+    {
+      idExterno: 401,
+      preco: 50.371,
+    },
+    {
+      idExterno: 64,
+      preco: 2.11,
+    },
+    {
+      idExterno: 112,
+      preco: 4.15,
+    },
+    {
+      idExterno: 391,
+      preco: 14.65,
     },
     {
       idExterno: 393,
-      preco: "5",
+      preco: 27.59,
+    },
+    {
+      idExterno: 2283,
+      preco: "0.1",
+    },
+    {
+      idExterno: 131,
+      preco: 2.1,
+    },
+    {
+      idExterno: 172,
+      preco: 6.22,
+    },
+    {
+      idExterno: 158,
+      preco: 29,
+    },
+    {
+      idExterno: 173,
+      preco: 9.17,
+    },
+    {
+      idExterno: 179,
+      preco: 6.68,
+    },
+    {
+      idExterno: 298,
+      preco: 13,
+    },
+    {
+      idExterno: 410,
+      preco: 40.652,
+    },
+    {
+      idExterno: 390,
+      preco: 200,
+    },
+    {
+      idExterno: 49,
+      preco: 7.592,
+    },
+    {
+      idExterno: 400,
+      preco: 82.083,
+    },
+    {
+      idExterno: 312,
+      preco: 36.61,
     },
   ];
   */

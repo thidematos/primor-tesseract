@@ -18,8 +18,6 @@ app.use(morgan('dev'));
 app.use((req, res, next) => {
   req.id = uuidv4();
 
-  console.log(req.id);
-
   next();
 });
 

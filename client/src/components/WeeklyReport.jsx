@@ -185,9 +185,6 @@ function TableHeader({ lastWeek, actualWeek }) {
     (el) => el.semana === actualWeek.semana,
   );
 
-  console.log(totalLastWeek);
-  console.log(totalActualWeek);
-
   return (
     <>
       <div className="row-span-1 grid grid-cols-7 content-center items-center justify-center border-b border-gray-300 py-10">
@@ -219,6 +216,8 @@ function TableHeader({ lastWeek, actualWeek }) {
 
 function Insumo({ insumo, lastWeek, actualWeek }) {
   const { ingredients, numberToPriceString } = useIngredients();
+
+  if (!ingredients || !insumo || !actualWeek) return null;
 
   const currentInsumo = ingredients.find((el) => el._id === insumo.insumo);
 

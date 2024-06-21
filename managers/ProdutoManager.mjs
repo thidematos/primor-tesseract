@@ -54,7 +54,6 @@ class ProdutoManager {
         ),
       });
 
-      console.log('Quero ver: productManager addWeeklyReport');
       await currentProduto.save();
     } catch (err) {
       console.log(err);
@@ -65,7 +64,7 @@ class ProdutoManager {
     try {
       //Tenho acesso à semana ID pelo this.semana
       const allIngredients = await this.getAllIngredientes();
-      console.log('Náo quero ver: createProduto');
+
       const newProduto = await Produto.create({
         nome: produto.produto.nome,
         idExterno: Number.parseInt(produto.produto.id),
@@ -110,15 +109,6 @@ class ProdutoManager {
 
       const foundIngredient = allIngredients.find(
         (insumo) => insumo.idExterno === id
-      );
-
-      console.log('Hey! Found ingredient: ', foundIngredient);
-
-      console.log(
-        'Hey! Current week: ',
-        foundIngredient.precoSemana.find(
-          (el) => String(el.semana) === String(this.semana)
-        ).preco
       );
 
       return {

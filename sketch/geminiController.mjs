@@ -73,8 +73,6 @@ const extractPDF = async (pagePNG) => {
   const result = await model.generateContent([prompt, image]);
   const text = await result.response.text();
 
-  console.log(text);
-
   return text;
 };
 
