@@ -1,5 +1,8 @@
 import { NavLink } from "react-router-dom";
 import Logo from "../utils/Logo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 function ReportNavbar() {
   return (
@@ -13,11 +16,13 @@ function ReportNavbar() {
 }
 
 function Navigation() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <ul className="flex w-full flex-col items-center justify-center gap-10 font-montserrat text-xl">
+    <ul className="flex w-[60%] flex-col items-center justify-center gap-10 font-montserrat text-xl 2xl:text-base">
       <NavLink
         className={
-          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "text-center text-lg text-gray-800 drop-shadow-lg duration-150"
         }
         to={"/overview/relatorios"}
       >
@@ -25,7 +30,7 @@ function Navigation() {
       </NavLink>
       <NavLink
         className={
-          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "text-center text-lg text-gray-800 drop-shadow-lg duration-150"
         }
         to={"/overview/produtos"}
       >
@@ -34,7 +39,7 @@ function Navigation() {
 
       <NavLink
         className={
-          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "text-center text-lg text-gray-800 drop-shadow-lg duration-150"
         }
         to={"/overview/ingredientes"}
       >
@@ -42,11 +47,18 @@ function Navigation() {
       </NavLink>
       <NavLink
         className={
-          "w-[60%] rounded border border-orange-500 p-4 text-center shadow drop-shadow-lg"
+          "relative flex flex-col items-center justify-center rounded-full bg-blue-500 p-4 text-gray-50 shadow-2xl drop-shadow-lg duration-150"
         }
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         to={"/novo-relatorio"}
       >
-        NOVO RELATÓRIO
+        <p
+          className={`${isHovered ? "visible opacity-100" : "collapse opacity-0"} absolute top-[120%] w-[150px] rounded bg-red-500/85 p-2 text-center text-sm text-gray-50 duration-150`}
+        >
+          Novo relatório semanal
+        </p>
+        <FontAwesomeIcon icon={faFileCirclePlus} className="size-[30px]" />
       </NavLink>
     </ul>
   );

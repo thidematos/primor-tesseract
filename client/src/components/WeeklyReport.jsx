@@ -29,7 +29,7 @@ function WeeklyReport() {
     getIngredients();
   }, [getAllProducts, semanaId, getWeek, getIngredients]);
 
-  if (!products || !currentWeek || !ingredients)
+  if (!products || !currentWeek || !ingredients.length)
     return <Loader position={"col-span-7"} />;
 
   return (
@@ -43,6 +43,8 @@ function WeeklyReport() {
 function Header() {
   const { currentWeek, getWeekPdfs, download } = useWeeks();
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div className="flex w-full flex-row items-center justify-around py-5">
       <Title fontSize="text-2xl">RELATÓRIO SEMANAL</Title>
@@ -55,12 +57,22 @@ function Header() {
         <p className="text-red-700">
           {format(currentWeek.intervalo.fim, "dd MMM'. de' yyyy")}
         </p>
-
-        <FontAwesomeIcon
-          className={`${download ? "animate-spin" : ""} cursor-pointer text-2xl text-blue-500`}
-          icon={download ? faSpinner : faFileArrowDown}
-          onClick={() => getWeekPdfs()}
-        />
+        <div
+          className="relative"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <FontAwesomeIcon
+            className={`${download ? "animate-spin" : ""} cursor-pointer text-3xl text-blue-500`}
+            icon={download ? faSpinner : faFileArrowDown}
+            onClick={() => getWeekPdfs()}
+          />
+          <p
+            className={`${isHovered ? "visible opacity-100" : "collapse opacity-0"} absolute left-[150%] top-[-40%] z-30 w-[150px] rounded bg-red-600/85 p-2 text-center text-sm text-gray-50 shadow-xl duration-150`}
+          >
+            Baixar PDFs da semana
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -120,12 +132,14 @@ function Product() {
     <div className="w-full text-center">
       <Title margin="mt-5">{currentProduct.nome}</Title>
 
-      <div className="grid h-[700px] w-full grid-flow-row auto-rows-min overflow-y-scroll font-noto text-gray-800">
+      <div className="grid h-[700px] w-full grid-flow-row auto-rows-min overflow-y-scroll font-noto text-gray-800 2xl:h-[500px]">
         <TableHeader
           lastWeek={lastWeekProductInfo}
           actualWeek={actualWeekProductInfo}
         />
-        <p className="row-span-1 border-b border-gray-300 py-5">MACRO</p>
+        <p className="row-span-1 border-b border-gray-300 py-5 2xl:text-sm">
+          MACRO
+        </p>
 
         {macros.map((macroInsumo) => (
           <Insumo
@@ -136,7 +150,9 @@ function Product() {
           />
         ))}
 
-        <p className="row-span-1 border-b border-gray-300 py-5">MICRO</p>
+        <p className="row-span-1 border-b border-gray-300 py-5 2xl:text-sm">
+          MICRO
+        </p>
         {micros.map((microInsumo) => (
           <Insumo
             key={microInsumo.insumo}
@@ -145,7 +161,9 @@ function Product() {
             actualWeek={actualWeekProductInfo.micro}
           />
         ))}
-        <p className="row-span-1 border-b border-gray-300 py-5">OUTROS</p>
+        <p className="row-span-1 border-b border-gray-300 py-5 2xl:text-sm">
+          OUTROS
+        </p>
         {outros.map((outroInsumo) => (
           <Insumo
             key={outroInsumo.insumo}
@@ -187,21 +205,21 @@ function TableHeader({ lastWeek, actualWeek }) {
 
   return (
     <>
-      <div className="row-span-1 grid grid-cols-7 content-center items-center justify-center border-b border-gray-300 py-10">
-        <p className="col-span-1"></p>
+      <div className="row-span-1 grid grid-cols-8 content-center items-center justify-center border-b border-gray-300 py-10">
         <p className="col-span-2 text-sm tracking-wider">
           {lastWeekData &&
             `De ${format(lastWeekData.intervalo.inicio, "dd/MM/yyyy")} à ${format(lastWeekData.intervalo.fim, "dd/MM/yyyy")}:`}
         </p>
-        <p className="col-span-1 text-xl text-blue-500">
+        <p className="col-span-2 text-xl text-blue-500">
           {totalLastWeek && numberToPriceString(totalLastWeek.precoTotal)}
         </p>
+
         <p className="col-span-2 text-sm">Semana atual:</p>
-        <p className="col-span-1 text-xl text-blue-500">
+        <p className="col-span-2 text-xl text-blue-500">
           {totalActualWeek && numberToPriceString(totalActualWeek.precoTotal)}
         </p>
       </div>
-      <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5">
+      <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5 2xl:text-sm">
         <p>NOME</p>
         <p>QUANTIDADE</p>
         <p>PREÇO</p>
@@ -217,21 +235,21 @@ function TableHeader({ lastWeek, actualWeek }) {
 function Insumo({ insumo, lastWeek, actualWeek }) {
   const { ingredients, numberToPriceString } = useIngredients();
 
-  if (!ingredients || !insumo || !actualWeek) return null;
+  console.log(ingredients);
 
   const currentInsumo = ingredients.find((el) => el._id === insumo.insumo);
 
   const currentInsumoOnActualWeek = actualWeek.find(
-    (el) => el.insumo === currentInsumo._id,
+    (el) => el.insumo === currentInsumo?._id,
   );
 
   const currentInsumoOnLastWeek = lastWeek?.find(
-    (el) => el.insumo === currentInsumo._id,
+    (el) => el.insumo === currentInsumo?._id,
   );
 
   return (
-    <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5">
-      <p className="col-span-1 self-center">{currentInsumo.nome}</p>
+    <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5 2xl:text-sm">
+      <p className="col-span-1 self-center 2xl:text-sm">{currentInsumo.nome}</p>
       {lastWeek && (
         <>
           <p className="col-span-1 self-center">
@@ -254,7 +272,9 @@ function Insumo({ insumo, lastWeek, actualWeek }) {
           </p>
         </>
       )}
-      {!lastWeek && <p className="col-span-3 self-center">Sem informações</p>}
+      {!lastWeek && (
+        <p className="col-span-3 self-center 2xl:text-xs">Sem informações</p>
+      )}
       <p className="col-span-1 self-center">
         {currentInsumoOnActualWeek?.qtdBatidaMil
           ? `${currentInsumoOnActualWeek.qtdBatidaMil} KG`

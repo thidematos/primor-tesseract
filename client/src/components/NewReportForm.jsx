@@ -5,7 +5,10 @@ import { useIngredients } from "../context/IngredientsProvider";
 import Loader from "../utils/Loader";
 import { format } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRightToBracket,
+  faMoneyCheckDollar,
+} from "@fortawesome/free-solid-svg-icons";
 
 function NewReportForm() {
   const {
@@ -223,11 +226,30 @@ function InsumoNewPrice({ ingredient }) {
 }
 
 function TableHeader() {
+  const [isHovered, setIsHovered] = useState(false);
+  const { dispatch } = useIngredients();
+
   return (
     <div className="row-span-1 grid grid-cols-12 gap-x-10 font-montserrat text-lg text-gray-500 drop-shadow-sm">
       <p className="col-span-4 self-center text-center">INSUMO</p>
       <p className="col-span-4 self-center text-center">PREÇO PASSADO</p>
-      <p className="col-span-4 self-center text-center">PREÇO ATUAL</p>
+      <div className="relative col-span-4 flex w-[90%] flex-row items-center justify-evenly self-center text-center">
+        <p className="w-[80%]">PREÇO ATUAL</p>
+        <div className="relative flex w-[20%] flex-col items-center justify-center">
+          <FontAwesomeIcon
+            icon={faMoneyCheckDollar}
+            className="w-fit cursor-pointer text-2xl text-red-600 drop-shadow-sm"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={() => dispatch({ type: "allPricesToLastWeek" })}
+          />
+          <p
+            className={`${isHovered ? "visible opacity-100" : "invisible opacity-0"} absolute top-[120%] w-[200%] rounded border border-red-600 bg-red-800/75 p-2 text-xs text-gray-100 shadow-xl duration-500`}
+          >
+            Importar todos os preços da semana passada
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

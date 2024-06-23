@@ -1,14 +1,16 @@
 import { useState } from "react";
 import Logo from "../utils/Logo";
 import { useExtract } from "../context/ExtractProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
 
 function SubmitPDF() {
   const [uploadedPDF, setUploadedPDF] = useState(null);
 
   return (
-    <div className="relative flex flex-col items-center justify-center">
-      <Logo width="w-[60%] " position="absolute top-[5%]" />
-      <div className="flex w-full flex-col items-center justify-center gap-10">
+    <div className="relative col-span-1 flex flex-col items-center justify-center 2xl:gap-6">
+      <Logo width="w-[60%]" position="3xl:absolute 3xl:top-[5%] 2xl:block" />
+      <div className="flex w-full flex-col items-center justify-center gap-10 2xl:gap-6">
         <PDFUploader
           uploadedPDF={uploadedPDF}
           setUploadedPDF={setUploadedPDF}
@@ -55,7 +57,7 @@ function Submit({ uploadedPDF }) {
 
   return (
     <button
-      className={`w-[60%] cursor-pointer rounded border border-gray-200 p-3 text-center font-noto shadow-lg ${uploadedPDF ? "bg-blue-500 text-gray-50" : "cursor-not-allowed bg-gray-300 text-gray-800"}`}
+      className={`w-[60%] cursor-pointer rounded border border-gray-200 p-3 text-center font-noto shadow-lg 2xl:w-[80%] ${uploadedPDF ? "bg-blue-500 text-gray-50" : "cursor-not-allowed bg-gray-300 text-gray-800"}`}
       disabled={!uploadedPDF}
       onClick={() => extractPDFData(...uploadedPDF)}
     >
@@ -66,10 +68,11 @@ function Submit({ uploadedPDF }) {
 
 function Instructions() {
   return (
-    <ol className="flex w-[80%] list-inside list-decimal flex-col items-start justify-center gap-3 font-montserrat text-gray-800">
+    <ol className="flex w-[80%] list-inside list-decimal flex-col items-start justify-center gap-3 font-montserrat text-gray-800 2xl:w-[90%] 2xl:text-sm">
       <li className="drop-shadow-sm">
-        <span className="text-red-600">Defina os preços</span> dos insumos
+        <span className="text-red-600">Defina os preços</span> dos insumos.
       </li>
+
       <li className="drop-shadow-sm">
         Selecione o intervalo de tempo válido desse relatório
       </li>

@@ -51,6 +51,19 @@ function reducer(state, action) {
         }),
       };
 
+    case "allPricesToLastWeek":
+      return {
+        ...state,
+        precos: state.precos.map((preco) => {
+          return {
+            ...preco,
+            preco: state.ingredients
+              .find((insumo) => insumo.idExterno === preco.idExterno)
+              .precoSemana.at(-1).preco,
+          };
+        }),
+      };
+
     case "fetched/ready":
       return {
         ...state,
