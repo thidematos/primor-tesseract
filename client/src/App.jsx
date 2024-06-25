@@ -8,6 +8,8 @@ import { ProductsProvider } from "./context/ProductsProvider";
 import WeeklyReport from "./components/WeeklyReport";
 import GraphsIndex from "./components/GraphsIndex";
 import { WeeksProvider } from "./context/WeeksProvider";
+import ProductsList from "./components/ProductsList";
+import ProductDetails from "./components/ProductDetails";
 
 function App() {
   return (
@@ -25,9 +27,10 @@ function App() {
                       path="relatorios/:semanaId"
                       element={<WeeklyReport />}
                     />
+                    <Route path="produtos" element={<ProductsList />} />
                     <Route
-                      path="produtos"
-                      element={<p className="col-span-7">teste</p>}
+                      path="produtos/:productIdExterno"
+                      element={<ProductDetails />}
                     />
                     <Route
                       path="ingredientes"

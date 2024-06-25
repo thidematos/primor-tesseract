@@ -10,7 +10,6 @@ import {
   faFileArrowDown,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useProductPagination } from "../hooks/useProductPagination";
 import { useIngredients } from "../context/IngredientsProvider";
 import { useWeeks } from "../context/WeeksProvider";
 

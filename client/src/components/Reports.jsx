@@ -15,7 +15,7 @@ function Reports() {
     getAllWeeks();
   }, [getAllWeeks]);
 
-  if (!weeks) return <Loader position={"col-span-4"} />;
+  if (!weeks) return <Loader position={"col-span-7"} />;
 
   return (
     <div className="col-span-7 overflow-y-scroll py-[5%]">

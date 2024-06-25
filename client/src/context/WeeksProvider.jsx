@@ -119,6 +119,25 @@ function WeeksProvider({ children }) {
     dispatch({ type: "download", payload: false });
   }, [currentWeek]);
 
+  const getCurrentAndLastWeek = useCallback((data, type) => {
+    switch (type) {
+      case "ingredient":
+        return {
+          lastWeek: data.precosTotalSemanal.at(-2).semana,
+          actualWeek: data.precosTotalSemanal.at(-1).semana,
+        };
+
+      case "product":
+        return {
+          lastWeek: data.precosTotalSemanal.at(-2).semana,
+          actualWeek: data.precosTotalSemanal.at(-1).semana,
+        };
+
+      default:
+        throw new Error("Unknown type passed");
+    }
+  }, []);
+
   return (
     <WeeksContext.Provider
       value={{
@@ -131,6 +150,7 @@ function WeeksProvider({ children }) {
         getWeekPdfs,
         getWeek,
         getAllWeeks,
+        getCurrentAndLastWeek,
       }}
     >
       {children}
