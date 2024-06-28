@@ -73,7 +73,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 4,
-      preco: "1.760",
+      preco: "1.070",
     },
     {
       idExterno: 16,
@@ -265,7 +265,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 287,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 289,
@@ -273,7 +273,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 277,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 43,
@@ -281,7 +281,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 2290,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 19,
@@ -289,7 +289,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 2291,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 131,
@@ -297,7 +297,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 2283,
-      preco: "0.1",
+      preco: "0",
     },
   ];
 
@@ -412,7 +412,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 277,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 43,
@@ -428,11 +428,11 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 2290,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 2291,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 313,
@@ -500,7 +500,7 @@ function ExtractProvider({ children }) {
     },
     {
       idExterno: 2283,
-      preco: "0.1",
+      preco: "0",
     },
     {
       idExterno: 131,

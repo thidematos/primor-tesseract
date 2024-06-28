@@ -94,11 +94,6 @@ produtoSchema.pre('save', function (next) {
   next();
 });
 
-produtoSchema.pre(/^find/, function (next) {
-  //Pre find middleware
-  next();
-});
-
 const Produto = mongoose.model('Produto', produtoSchema);
 
 export default Produto;

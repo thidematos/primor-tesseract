@@ -15,6 +15,8 @@ import { useProducts } from "../context/ProductsProvider";
 import { useWeeks } from "../context/WeeksProvider";
 import { format } from "date-fns";
 import { useIngredients } from "../context/IngredientsProvider";
+import PointLabel from "../utils/PointLabel";
+import Labels from "../utils/Labels";
 
 function ProductDetails() {
   return (
@@ -94,38 +96,6 @@ function PriceChart() {
       </div>
     </>
   );
-}
-
-function PointLabel(props) {
-  const { numberToPriceString } = useIngredients();
-
-  return (
-    <Text
-      x={props.x + 40}
-      y={props.y - 10}
-      textAnchor="middle"
-      className="text-sm text-red-600 drop-shadow-sm"
-      fill="rgb(220,38, 38)"
-      fontWeight={"bold"}
-      fontFamily="Noto"
-    >
-      {numberToPriceString(props.value)}
-    </Text>
-  );
-}
-
-function Labels({ payload, label, active }) {
-  const { numberToPriceString } = useIngredients();
-
-  if (active)
-    return (
-      <p className="rounded border border-gray-300 bg-gray-200 p-2 font-noto text-sm text-gray-600 shadow-xl">
-        <span className="font-bold tracking-wider text-blue-500">
-          {numberToPriceString(payload.at(0).value)}
-        </span>{" "}
-        em {payload.at(0).payload?.semana}
-      </p>
-    );
 }
 
 export default ProductDetails;

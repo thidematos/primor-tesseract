@@ -123,13 +123,13 @@ function WeeksProvider({ children }) {
     switch (type) {
       case "ingredient":
         return {
-          lastWeek: data.precosTotalSemanal.at(-2).semana,
+          lastWeek: data.precosTotalSemanal.at(-2)?.semana,
           actualWeek: data.precosTotalSemanal.at(-1).semana,
         };
 
       case "product":
         return {
-          lastWeek: data.precosTotalSemanal.at(-2).semana,
+          lastWeek: data.precosTotalSemanal.at(-2)?.semana,
           actualWeek: data.precosTotalSemanal.at(-1).semana,
         };
 

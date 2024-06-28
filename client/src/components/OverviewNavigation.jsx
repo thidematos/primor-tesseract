@@ -13,11 +13,19 @@ import {
 import Title from "./../utils/Title";
 
 function OverviewNavigation() {
-  const { semanaId, productIdExterno } = useParams();
+  const { semanaId, productIdExterno, ingredientIdExterno } = useParams();
+
+  if (ingredientIdExterno) return <IngredientsNavigation />;
 
   if (productIdExterno) return <ProductDetails />;
 
   if (semanaId) return <WeeklyReportSidebar />;
+
+  return null;
+}
+
+function IngredientsNavigation() {
+  return <div className="markup col-span-2">oi </div>;
 }
 
 function ProductDetails() {

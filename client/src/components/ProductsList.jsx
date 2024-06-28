@@ -31,7 +31,7 @@ function Header() {
   return (
     <div>
       <Title fontSize="text-2xl text-gray-700 text-center">
-        Catálogo de produtos
+        CATÁLOGO DE PRODUTOS
       </Title>
     </div>
   );

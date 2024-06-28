@@ -58,29 +58,13 @@ const getAllIngredients = catchAsync(async (req, res, next) => {
 const getIngredient = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const ingredients = await Ingrediente.find({ idExterno: Number(id) });
-
-  /*
-  if (ingredients.length > 0) {
-    ingredients.at(0).idExterno = Number(id) + 1;
-    await ingredients.at(0).save();
-
-    await Ingrediente.deleteMany({
-      idExterno: Number(id),
-    });
-
-    ingredients.at(0).idExterno = Number(id);
-    await ingredients.at(0).save();
-  }
-
-  const ingredients2 = await Ingrediente.find({ idExterno: Number(id) });
-  */
+  const ingredient = await Ingrediente.findOne({ idExterno: Number(id) });
 
   res.status(200).json({
     status: 'success',
-    results: ingredients.length,
+
     data: {
-      ingredients,
+      ingredient,
     },
   });
 });
@@ -102,10 +86,14 @@ const verifyPrices = catchAsync(async (req, res, next) => {
 
   const ingredientsPromise = ingredients.map(async (insumo) => {
     if (String(insumo.precoSemana.at(-1).semana) !== String(req.semana._id)) {
+      const actualPrice = precos.find(
+        (preco) => preco.idExterno === insumo.idExterno
+      ).preco;
+      const flag = parseFloat(actualPrice) ? false : true;
       insumo.precoSemana.push({
         semana: String(req.semana._id),
-        preco: precos.find((preco) => preco.idExterno === insumo.idExterno)
-          .preco,
+        preco: !flag ? actualPrice : 0,
+        noPriceFlag: flag,
       });
 
       console.log('Atualizado: ', insumo.nome);

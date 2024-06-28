@@ -32,39 +32,6 @@ class IngredientManager {
     return insumo.preco;
   }
 
-  /*
-  async addWeeklyReport(insumo) {
-    try {
-      const precoSemanaToPush = {
-        semana: this.semana,
-        preco: Number.parseFloat(insumo.price),
-        alreadyIncluded: true,
-      };
-
-      const id = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
-
-      const currentInsumo = await Ingrediente.findOne({
-        idExterno: id,
-      });
-
-      console.log('Hi from weekly!');
-
-      if (this.allIngredients.includes(id)) return;
-
-      this.allIngredients.push(id);
-
-      console.log('Atualizou: ', currentInsumo.nome);
-
-      currentInsumo.precoSemana.push(precoSemanaToPush);
-
-      await currentInsumo.save({ j: true });
-    } catch (err) {
-      console.log(err);
-      process.exit(-1);
-    }
-  }
-  */
-
   async getAllIngredients() {
     const ingredients = await Ingrediente.find({});
 
@@ -86,10 +53,12 @@ class IngredientManager {
     try {
       const id = this.verifiesIfBlacklisted(Number.parseInt(insumo.id));
       // this.alreadyIncluded.push(id);
+      const actualPrice = Number.parseFloat(insumo.price);
 
       const precoSemanaToPush = {
         semana: this.semana,
         preco: Number.parseFloat(insumo.price),
+        noPriceFlag: actualPrice ? false : true,
       };
 
       console.log('Novo insumo: ', insumo.nome);

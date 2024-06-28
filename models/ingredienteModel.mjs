@@ -28,6 +28,7 @@ const ingredienteSchema = new mongoose.Schema({
         ref: 'Semana',
       },
       preco: Number,
+      noPriceFlag: Boolean,
     },
   ],
 });

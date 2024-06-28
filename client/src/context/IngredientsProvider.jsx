@@ -1,4 +1,5 @@
 import axios from "axios";
+import { id } from "date-fns/locale";
 import {
   createContext,
   useCallback,
@@ -18,6 +19,7 @@ const initials = {
     start: "",
     end: "",
   },
+  currentIngredient: null,
 };
 
 function reducer(state, action) {
@@ -77,16 +79,21 @@ function reducer(state, action) {
         }),
       };
 
+    case "fetchedSingleIngredient/ready":
+      return {
+        ...state,
+        status: "ready",
+        currentIngredient: action.payload,
+      };
+
     default:
       throw new Error("Unknow action");
   }
 }
 
 function IngredientsProvider({ children }) {
-  const [{ status, ingredients, precos, week }, dispatch] = useReducer(
-    reducer,
-    initials,
-  );
+  const [{ status, ingredients, precos, week, currentIngredient }, dispatch] =
+    useReducer(reducer, initials);
 
   const [currentInput, setCurrentInput] = useState(0);
 
@@ -96,6 +103,16 @@ function IngredientsProvider({ children }) {
     const res = await axios.get("/api/v1/ingredientes");
 
     dispatch({ type: "fetched/ready", payload: res.data.data.ingredients });
+  }, []);
+
+  const getSingleIngredient = useCallback(async (idExterno) => {
+    dispatch({ type: "loading" });
+    const res = await axios.get(`/api/v1/ingredientes/${idExterno}`);
+
+    dispatch({
+      type: "fetchedSingleIngredient/ready",
+      payload: res.data.data.ingredient,
+    });
   }, []);
 
   const ingredientsSorted = ingredients
@@ -132,7 +149,9 @@ function IngredientsProvider({ children }) {
         ingredients,
         dispatch,
         getIngredients,
+        getSingleIngredient,
         ingredientsSorted,
+        currentIngredient,
         precos,
         getPreco,
         handleChangePreco,

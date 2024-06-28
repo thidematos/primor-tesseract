@@ -10,6 +10,8 @@ import GraphsIndex from "./components/GraphsIndex";
 import { WeeksProvider } from "./context/WeeksProvider";
 import ProductsList from "./components/ProductsList";
 import ProductDetails from "./components/ProductDetails";
+import IngredientsList from "./components/IngredientsList";
+import IngredientsDetails from "./components/IngredientsDetails";
 
 function App() {
   return (
@@ -32,9 +34,10 @@ function App() {
                       path="produtos/:productIdExterno"
                       element={<ProductDetails />}
                     />
+                    <Route path="ingredientes" element={<IngredientsList />} />
                     <Route
-                      path="ingredientes"
-                      element={<p className="col-span-7">teste ingredientes</p>}
+                      path="ingredientes/:ingredientIdExterno"
+                      element={<IngredientsDetails />}
                     />
                   </Route>
                   <Route path="/novo-relatorio" element={<NewReport />} />
