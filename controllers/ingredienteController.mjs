@@ -1,4 +1,5 @@
 import IngredientManager from '../managers/IngredientsManager.mjs';
+import Produto from '../models/produtoModel.mjs';
 import Semana from '../models/semanaModel.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import Ingrediente from './../models/ingredienteModel.mjs';
@@ -43,40 +44,6 @@ const createIngredientes = catchAsync(async (req, res, next) => {
   next();
 });
 
-const getAllIngredients = catchAsync(async (req, res, next) => {
-  const ingredients = await Ingrediente.find().populate('precoSemana.semana');
-
-  res.status(200).json({
-    status: 'success',
-    results: ingredients.length,
-    data: {
-      ingredients,
-    },
-  });
-});
-
-const getIngredient = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-
-  const ingredient = await Ingrediente.findOne({ idExterno: Number(id) });
-
-  res.status(200).json({
-    status: 'success',
-
-    data: {
-      ingredient,
-    },
-  });
-});
-
-const deleteAllFuckingIngredients = catchAsync(async (req, res, next) => {
-  await Ingrediente.deleteMany({});
-
-  res.status(204).json({
-    status: 'success',
-  });
-});
-
 const verifyPrices = catchAsync(async (req, res, next) => {
   const precos = JSON.parse(req.body.precos);
 
@@ -107,10 +74,72 @@ const verifyPrices = catchAsync(async (req, res, next) => {
   next();
 });
 
+const getAllIngredients = catchAsync(async (req, res, next) => {
+  const ingredients = await Ingrediente.find().populate('precoSemana.semana');
+
+  res.status(200).json({
+    status: 'success',
+    results: ingredients.length,
+    data: {
+      ingredients,
+    },
+  });
+});
+
+const getIngredient = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const ingredient = await Ingrediente.findOne({ idExterno: Number(id) });
+
+  res.status(200).json({
+    status: 'success',
+
+    data: {
+      ingredient,
+    },
+  });
+});
+
+const patchIngredientPrice = catchAsync(async (req, res, next) => {
+  //ESSA MUDANÇA AINDA NÃO REFLETE NO PREÇO COLOCADO NOS PRODUTOS! ACHO QUE VOU TIRAR O PREÇO DE LÁ E DEPENDER SÓ DO PREÇO DO INGREDIENTE. VAI SER FODA.
+  const { id: idExterno } = req.params;
+
+  const currentIngredient = await Ingrediente.findOne({
+    idExterno: Number(idExterno),
+  });
+
+  currentIngredient.precoSemana = currentIngredient.precoSemana.map((el) => {
+    if (String(el.semana) !== req.body.semanaId) return el;
+
+    return {
+      ...el,
+      preco: req.body.newPrice,
+    };
+  });
+
+  const newCurrentIngredient = await currentIngredient.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      ingredient: newCurrentIngredient,
+    },
+  });
+});
+
+const deleteAllFuckingIngredients = catchAsync(async (req, res, next) => {
+  await Ingrediente.deleteMany({});
+
+  res.status(204).json({
+    status: 'success',
+  });
+});
+
 export {
   createIngredientes,
   getAllIngredients,
   getIngredient,
   deleteAllFuckingIngredients,
   verifyPrices,
+  patchIngredientPrice,
 };

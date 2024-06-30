@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Ingrediente from './ingredienteModel.mjs';
 
 const produtoSchema = new mongoose.Schema({
   nome: {
@@ -83,8 +84,6 @@ produtoSchema.pre('save', function (next) {
       sum += outrosInsumo.qtdBatidaMil * outrosInsumo.weeklyPreco;
     });
   }
-
-  console.log(sum);
 
   this.precosTotalSemanal.push({
     semana: actualIngredients.semana,

@@ -5,7 +5,10 @@ const router = express.Router();
 
 router.get('/', ingredienteController.getAllIngredients);
 
-router.get('/:id', ingredienteController.getIngredient);
+router
+  .route('/:id')
+  .get(ingredienteController.getIngredient)
+  .patch(ingredienteController.patchIngredientPrice);
 
 router.delete('/', ingredienteController.deleteAllFuckingIngredients);
 

@@ -25,8 +25,6 @@ function IngredientsContainer() {
 
   if (!ingredientsSorted) return null;
 
-  console.log(ingredientsSorted);
-
   return (
     <div className="grid h-[500px] w-full grid-cols-4 gap-10 overflow-y-scroll p-6">
       {ingredientsSorted.map((ingredient) => (

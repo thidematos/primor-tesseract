@@ -12,6 +12,7 @@ import ProductsList from "./components/ProductsList";
 import ProductDetails from "./components/ProductDetails";
 import IngredientsList from "./components/IngredientsList";
 import IngredientsDetails from "./components/IngredientsDetails";
+import ChangePriceModal from "./components/ChangePriceModal";
 
 function App() {
   return (
@@ -38,7 +39,9 @@ function App() {
                     <Route
                       path="ingredientes/:ingredientIdExterno"
                       element={<IngredientsDetails />}
-                    />
+                    >
+                      <Route path="preco" element={<ChangePriceModal />} />
+                    </Route>
                   </Route>
                   <Route path="/novo-relatorio" element={<NewReport />} />
                 </Routes>

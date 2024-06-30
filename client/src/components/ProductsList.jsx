@@ -17,8 +17,6 @@ function ProductsList() {
 
   if (!products) return <Loader position={"col-span-7"} />;
 
-  console.log(products);
-
   return (
     <div className="col-span-7 flex flex-col items-center justify-start gap-10 py-16">
       <Header />
@@ -74,8 +72,6 @@ function ProductPrices({ product }) {
   const { numberToPriceString } = useIngredients();
 
   const weeks = getCurrentAndLastWeek(product, "product");
-
-  console.log(product);
 
   return (
     <div className="flex w-full flex-row justify-around">

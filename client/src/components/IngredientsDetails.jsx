@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { useIngredients } from "../context/IngredientsProvider";
 import { useEffect } from "react";
 import {
@@ -27,14 +27,13 @@ function IngredientsDetails() {
 
   if (!currentIngredient) return <Loader position={"col-span-6 self-center"} />;
 
-  console.log(currentIngredient);
-
   return (
-    <div className="markup col-span-6 flex flex-col items-center justify-start py-16">
+    <div className="col-span-6 flex flex-col items-center justify-start py-16">
       <Title fontSize="text-2xl text-orange-500" margin="mb-10">
         {currentIngredient.nome}
       </Title>
       <IngredientGraph />
+      <Outlet />
     </div>
   );
 }

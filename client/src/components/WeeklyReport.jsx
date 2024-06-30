@@ -234,8 +234,6 @@ function TableHeader({ lastWeek, actualWeek }) {
 function Insumo({ insumo, lastWeek, actualWeek }) {
   const { ingredients, numberToPriceString } = useIngredients();
 
-  console.log(ingredients);
-
   const currentInsumo = ingredients.find((el) => el._id === insumo.insumo);
 
   const currentInsumoOnActualWeek = actualWeek.find(
@@ -245,6 +243,12 @@ function Insumo({ insumo, lastWeek, actualWeek }) {
   const currentInsumoOnLastWeek = lastWeek?.find(
     (el) => el.insumo === currentInsumo?._id,
   );
+
+  const hasPriceFlagLastWeek =
+    currentInsumoOnLastWeek?.weeklyPreco === 0 ? true : false;
+
+  const hasPriceFlagActualWeek =
+    currentInsumoOnActualWeek?.weeklyPreco === 0 ? true : false;
 
   return (
     <div className="row-span-1 grid grid-cols-7 content-center justify-center border-b border-gray-300 py-5 2xl:text-sm">

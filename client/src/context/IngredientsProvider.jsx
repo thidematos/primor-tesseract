@@ -8,6 +8,7 @@ import {
   useReducer,
   useState,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
 const IngredientsContext = createContext();
 
@@ -97,6 +98,8 @@ function IngredientsProvider({ children }) {
 
   const [currentInput, setCurrentInput] = useState(0);
 
+  const navigate = useNavigate();
+
   const getIngredients = useCallback(async () => {
     dispatch({ type: "loading" });
 
@@ -114,6 +117,25 @@ function IngredientsProvider({ children }) {
       payload: res.data.data.ingredient,
     });
   }, []);
+
+  const updateSingleIngredient = useCallback(
+    async (idExterno, semanaId, newPrice) => {
+      dispatch({ type: "loading" });
+
+      const res = await axios.patch(`/api/v1/ingredientes/${idExterno}`, {
+        semanaId,
+        newPrice,
+      });
+
+      dispatch({
+        type: "fetchedSingleIngredient/ready",
+        payload: res.data.data.ingredient,
+      });
+
+      navigate(`/overview/ingredientes/${idExterno}`);
+    },
+    [navigate],
+  );
 
   const ingredientsSorted = ingredients
     .slice()
@@ -156,6 +178,7 @@ function IngredientsProvider({ children }) {
         getPreco,
         handleChangePreco,
         numberToPriceString,
+        updateSingleIngredient,
         week,
         currentInput: {
           state: currentInput,
