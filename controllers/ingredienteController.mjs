@@ -3,6 +3,7 @@ import Produto from '../models/produtoModel.mjs';
 import Semana from '../models/semanaModel.mjs';
 import catchAsync from '../utils/catchAsync.mjs';
 import Ingrediente from './../models/ingredienteModel.mjs';
+import { setWeeklyPricesOnProducts } from './produtoController.mjs';
 
 const createIngredientes = catchAsync(async (req, res, next) => {
   const filesData = req.segmentedPageContent;
@@ -118,6 +119,7 @@ const patchIngredientPrice = catchAsync(async (req, res, next) => {
   });
 
   const newCurrentIngredient = await currentIngredient.save();
+  await setWeeklyPricesOnProducts(true);
 
   res.status(200).json({
     status: 'success',

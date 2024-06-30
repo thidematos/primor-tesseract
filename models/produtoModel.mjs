@@ -63,25 +63,46 @@ const produtoSchema = new mongoose.Schema({
   ],
 });
 
-produtoSchema.pre('save', function (next) {
+/*
+produtoSchema.pre('save', async function (next) {
+  const ingredients = await Ingrediente.find();
+
   //pre save middleware
   let sum = 0;
   const actualIngredients = this.ingredientesSemanais.at(-1);
   if (actualIngredients.macro.length > 0) {
     actualIngredients.macro.forEach((macroInsumo) => {
-      sum += macroInsumo.qtdBatidaMil * macroInsumo.weeklyPreco;
+      sum +=
+        macroInsumo.qtdBatidaMil *
+        ingredients
+          .find((el) => String(el._id) === String(macroInsumo.insumo))
+          .precoSemana.find(
+            (el) => String(el.semana) === String(actualIngredients.semana)
+          ).preco;
     });
   }
 
   if (actualIngredients.micro.length > 0) {
     actualIngredients.micro.forEach((microInsumo) => {
-      sum += microInsumo.qtdBatidaMil * microInsumo.weeklyPreco;
+      sum +=
+        microInsumo.qtdBatidaMil *
+        ingredients
+          .find((el) => String(el._id) === String(microInsumo.insumo))
+          .precoSemana.find(
+            (el) => String(el.semana) === String(actualIngredients.semana)
+          ).preco;
     });
   }
 
   if (actualIngredients.outros.length > 0) {
     actualIngredients.outros.forEach((outrosInsumo) => {
-      sum += outrosInsumo.qtdBatidaMil * outrosInsumo.weeklyPreco;
+      sum +=
+        outrosInsumo.qtdBatidaMil *
+        ingredients
+          .find((el) => String(el._id) === String(outrosInsumo.insumo))
+          .precoSemana.find(
+            (el) => String(el.semana) === String(actualIngredients.semana)
+          ).preco;
     });
   }
 
@@ -92,6 +113,7 @@ produtoSchema.pre('save', function (next) {
 
   next();
 });
+*/
 
 const Produto = mongoose.model('Produto', produtoSchema);
 

@@ -558,7 +558,7 @@ function ExtractProvider({ children }) {
     });
 
     form.append("week", JSON.stringify(week));
-    form.append("precos", JSON.stringify(precos));
+    form.append("precos", JSON.stringify(precosSecondReportTeste));
 
     const res = await axios.post("api/v1/extract/extractPDF", form);
 

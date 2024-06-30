@@ -47,7 +47,7 @@ function IngredientPriceDate({ weekData, lastWeekData }) {
   return (
     <li className="relative w-full border-b border-gray-300 p-5">
       <p className="my-3 font-montserrat text-sm text-gray-700 drop-shadow-sm">
-        {format(week.intervalo.fim, "dd/MM/yyyy")}
+        {format(week?.intervalo.fim, "dd/MM/yyyy")}
       </p>
       <Link
         to={`/overview/ingredientes/${ingredientIdExterno}/preco?atWeek=${week._id}`}
