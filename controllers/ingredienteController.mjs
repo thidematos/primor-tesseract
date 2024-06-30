@@ -102,7 +102,6 @@ const getIngredient = catchAsync(async (req, res, next) => {
 });
 
 const patchIngredientPrice = catchAsync(async (req, res, next) => {
-  //ESSA MUDANÇA AINDA NÃO REFLETE NO PREÇO COLOCADO NOS PRODUTOS! ACHO QUE VOU TIRAR O PREÇO DE LÁ E DEPENDER SÓ DO PREÇO DO INGREDIENTE. VAI SER FODA.
   const { id: idExterno } = req.params;
 
   const currentIngredient = await Ingrediente.findOne({

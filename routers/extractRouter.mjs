@@ -19,4 +19,6 @@ router.post(
   produtoController.createProduto
 );
 
+router.post('/teste', upload.single('teste'), pdfController.testePrices);
+
 export default router;

@@ -84,4 +84,51 @@ const createSegmentContent = (req, res, next) => {
   next();
 };
 
-export { generatePDFPages, sequelizePageContent, createSegmentContent };
+const testePrices = async (req, res, next) => {
+  const doc = mupdf.Document.openDocument(req.file.buffer, 'application/pdf');
+  const count = doc.countPages();
+
+  const arr = Array.from({ length: count });
+
+  const extractedPagesContent = arr.map((_, ind) => {
+    const page = doc.loadPage(ind);
+
+    const json = JSON.parse(page.toStructuredText().asJSON());
+
+    return {
+      data: json.blocks
+        .slice(14)
+        .map((el) => {
+          return {
+            lines: el.lines,
+          };
+        })
+        .filter((el) => el.lines.length === 8)
+        .map((el) => {
+          return {
+            idExterno: el.lines.at(0).text,
+            price: el.lines.at(1).text,
+          };
+        }),
+    };
+  });
+
+  const prices = [
+    ...extractedPagesContent.at(0).data,
+    ...extractedPagesContent.at(1).data,
+  ];
+
+  res.status(200).json({
+    status: 'succes',
+    data: {
+      mappedData,
+    },
+  });
+};
+
+export {
+  generatePDFPages,
+  sequelizePageContent,
+  createSegmentContent,
+  testePrices,
+};
