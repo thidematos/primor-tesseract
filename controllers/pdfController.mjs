@@ -55,6 +55,7 @@ const sequelizePageContent = (req, res, next) => {
 const createSegmentContent = (req, res, next) => {
   const instanceManager = new PDFManager(
     JSON.parse(req.body.precos),
+    //req.body.precos,
     JSON.parse(req.body.week)
   );
 
@@ -113,10 +114,19 @@ const testePrices = async (req, res, next) => {
     };
   });
 
-  const prices = [
+  const rawPrices = [
     ...extractedPagesContent.at(0).data,
     ...extractedPagesContent.at(1).data,
   ];
+
+  const prices = rawPrices.map((el) => {
+    return {
+      idExterno: parseInt(el.idExterno),
+      price: parseFloat(el.price.replace('.', '').replace(',', '.')),
+    };
+  });
+
+  req.body.precos = prices;
 
   res.status(200).json({
     status: 'succes',

@@ -18,6 +18,7 @@ router.post(
   ingredienteController.verifyPrices,
   produtoController.createProduto
 );
+//Vou usar a mesma pipeline que já tenho. Vou adicionar uma flag na requisição que ditará se deverá usar a middleware de leitura do preços ou manual. Devo fazer o JSON.parse no req.body.prices logo no início, para que esteja disponível em todas as middlewares. Aí, não dará o erro de tentar dar parse num prices que já é um object.
 
 router.post('/teste', upload.single('teste'), pdfController.testePrices);
 

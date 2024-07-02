@@ -13,10 +13,13 @@ import ProductDetails from "./components/ProductDetails";
 import IngredientsList from "./components/IngredientsList";
 import IngredientsDetails from "./components/IngredientsDetails";
 import ChangePriceModal from "./components/ChangePriceModal";
+import StartSetPrices from "./pages/StartSetPrices";
+import AutomateNewReport from "./components/AutomateNewReport";
+import { StepperProvider } from "./context/StepperProvider";
 
 function App() {
   return (
-    <main className="flex h-[100dvh] w-[100dsvw] flex-col items-center justify-center bg-zinc-100">
+    <main className="flex h-[100dvh] w-[100dvw] flex-col items-center justify-center bg-zinc-100">
       <BrowserRouter>
         <IngredientsProvider>
           <ExtractProvider>
@@ -43,7 +46,19 @@ function App() {
                       <Route path="preco" element={<ChangePriceModal />} />
                     </Route>
                   </Route>
-                  <Route path="/novo-relatorio" element={<NewReport />} />
+                  <Route path="/novo-relatorio" element={<StartSetPrices />} />
+                  <Route
+                    path="/novo-relatorio/manual"
+                    element={<NewReport />}
+                  />
+                  <Route
+                    path="/novo-relatorio/automatico"
+                    element={
+                      <StepperProvider>
+                        <AutomateNewReport />
+                      </StepperProvider>
+                    }
+                  />
                 </Routes>
               </ProductsProvider>
             </WeeksProvider>
