@@ -51,8 +51,8 @@ function ExtractProvider({ children }) {
 
   const navigate = useNavigate();
 
-  const { precos, week } = useIngredients();
-  /*
+  //const { precos, week } = useIngredients();
+
   const { week } = useIngredients();
   const precos = [
     {
@@ -547,7 +547,6 @@ function ExtractProvider({ children }) {
       preco: 36.61,
     },
   ];
-  */
 
   async function extractPDFData(...file) {
     dispatch({ type: "uploaded/loading", payload: file });
@@ -559,9 +558,9 @@ function ExtractProvider({ children }) {
     });
 
     form.append("week", JSON.stringify(week));
-    form.append("precos", JSON.stringify(precos));
+    form.append("precos", JSON.stringify(precosSecondReportTeste));
 
-    const res = await axios.post("api/v1/extract/extractPDF", form);
+    const res = await axios.post("/api/v1/extract/extractPDF", form);
 
     dispatch({ type: "extractedPDF/loaded", payload: res.data.data.pdfData });
 

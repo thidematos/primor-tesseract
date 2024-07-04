@@ -9,8 +9,8 @@ const createIngredientes = catchAsync(async (req, res, next) => {
   const filesData = req.segmentedPageContent;
 
   const ingredientManagerInstance = new IngredientManager(
-    JSON.parse(req.body.precos),
-    //req.body.precos,
+    //JSON.parse(req.body.precos),
+    req.body.precos,
     req.semana._id,
     req.id
   );
@@ -47,8 +47,8 @@ const createIngredientes = catchAsync(async (req, res, next) => {
 });
 
 const verifyPrices = catchAsync(async (req, res, next) => {
-  const precos = JSON.parse(req.body.precos);
-  //const precos = req.body.precos;
+  //const precos = JSON.parse(req.body.precos);
+  const precos = req.body.precos;
 
   const ingredients = await Ingrediente.find({}).select(
     'idExterno nome precoSemana'

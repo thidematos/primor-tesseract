@@ -5,7 +5,7 @@ import * as mupdf from 'mupdf';
 const generatePDFPages = catchAsync(async (req, res, next) => {
   const extractedPagesContent = [];
 
-  req.files.forEach((file) => {
+  req.files.pdf.forEach((file) => {
     const doc = mupdf.Document.openDocument(file.buffer, 'application/pdf');
     const count = doc.countPages();
 
@@ -54,8 +54,8 @@ const sequelizePageContent = (req, res, next) => {
 
 const createSegmentContent = (req, res, next) => {
   const instanceManager = new PDFManager(
-    JSON.parse(req.body.precos),
-    //req.body.precos,
+    //JSON.parse(req.body.precos),
+    req.body.precos,
     JSON.parse(req.body.week)
   );
 
@@ -85,60 +85,88 @@ const createSegmentContent = (req, res, next) => {
   next();
 };
 
-const testePrices = async (req, res, next) => {
-  const doc = mupdf.Document.openDocument(req.file.buffer, 'application/pdf');
-  const count = doc.countPages();
+const generatePrices = async (req, res, next) => {
+  const { useAutomate } = req.query;
 
-  const arr = Array.from({ length: count });
+  if (Number(useAutomate) !== 1) {
+    req.body.precos = JSON.parse(req.body.precos);
+    return next();
+  }
 
-  const extractedPagesContent = arr.map((_, ind) => {
-    const page = doc.loadPage(ind);
+  const allRawPrices = [];
 
-    const json = JSON.parse(page.toStructuredText().asJSON());
+  req.files.price.forEach((file) => {
+    const doc = mupdf.Document.openDocument(file.buffer, 'application/pdf');
+    const count = doc.countPages();
 
-    return {
-      data: json.blocks
-        .slice(14)
-        .map((el) => {
-          return {
-            lines: el.lines,
-          };
-        })
-        .filter((el) => el.lines.length === 8)
-        .map((el) => {
-          return {
-            idExterno: el.lines.at(0).text,
-            price: el.lines.at(1).text,
-          };
-        }),
-    };
+    const arr = Array.from({ length: count });
+
+    const extractedPagesContent = arr.map((_, ind) => {
+      const page = doc.loadPage(ind);
+
+      const json = JSON.parse(page.toStructuredText().asJSON());
+
+      return {
+        data: json.blocks
+          .slice(14)
+          .map((el) => {
+            return {
+              lines: el.lines,
+            };
+          })
+          .filter((el) => el.lines.length === 8)
+          .map((el) => {
+            return {
+              idExterno: el.lines.at(0).text,
+              preco: el.lines.at(1).text,
+            };
+          }),
+      };
+    });
+
+    const rawPrices = [
+      ...extractedPagesContent.at(0).data,
+      ...extractedPagesContent.at(1).data,
+    ];
+
+    rawPrices.forEach((price) => allRawPrices.push(price));
   });
 
-  const rawPrices = [
-    ...extractedPagesContent.at(0).data,
-    ...extractedPagesContent.at(1).data,
-  ];
+  console.log(allRawPrices);
 
-  const prices = rawPrices.map((el) => {
-    return {
-      idExterno: parseInt(el.idExterno),
-      price: parseFloat(el.price.replace('.', '').replace(',', '.')),
-    };
-  });
+  const alreadyInArray = [];
+
+  const prices = allRawPrices
+    .map((el) => {
+      return {
+        idExterno: parseInt(el.idExterno),
+        preco: parseFloat(el.preco.replace('.', '').replace(',', '.')) / 1000,
+      };
+    })
+    .filter((el) => {
+      if (!alreadyInArray.includes(el.idExterno)) {
+        alreadyInArray.push(el.idExterno);
+        return true;
+      }
+
+      if (alreadyInArray.includes(el.idExterno)) return false;
+    });
 
   req.body.precos = prices;
-
+  /*
   res.status(200).json({
-    status: 'succes',
+    status: 'success',
     data: {
-      mappedData,
+      prices,
     },
   });
+  */
+  next();
 };
 
 export {
   generatePDFPages,
   sequelizePageContent,
   createSegmentContent,
-  testePrices,
+  generatePrices,
 };
