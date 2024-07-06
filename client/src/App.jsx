@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ExtractProvider } from "./context/ExtractProvider";
 import NewReport from "./pages/NewReport";
 import { IngredientsProvider } from "./context/IngredientsProvider";
@@ -6,7 +6,6 @@ import Overview from "./pages/Overview";
 import Reports from "./components/Reports";
 import { ProductsProvider } from "./context/ProductsProvider";
 import WeeklyReport from "./components/WeeklyReport";
-import GraphsIndex from "./components/GraphsIndex";
 import { WeeksProvider } from "./context/WeeksProvider";
 import ProductsList from "./components/ProductsList";
 import ProductDetails from "./components/ProductDetails";
@@ -16,6 +15,8 @@ import ChangePriceModal from "./components/ChangePriceModal";
 import StartSetPrices from "./pages/StartSetPrices";
 import AutomateNewReport from "./components/AutomateNewReport";
 import { StepperProvider } from "./context/StepperProvider";
+import Login from "./pages/Login";
+import ProtectRoutes from "./utils/ProtectRoutes";
 
 function App() {
   return (
@@ -26,8 +27,16 @@ function App() {
             <WeeksProvider>
               <ProductsProvider>
                 <Routes>
-                  <Route path="/overview" element={<Overview />}>
-                    <Route index element={<GraphsIndex />} />
+                  <Route path="/" element={<Login />} />
+                  <Route
+                    path="/overview"
+                    element={
+                      <ProtectRoutes>
+                        <Overview />
+                      </ProtectRoutes>
+                    }
+                  >
+                    <Route index element={<Navigate to={"relatorios"} />} />
                     <Route path="relatorios" element={<Reports />} />
                     <Route
                       path="relatorios/:semanaId"
@@ -46,17 +55,30 @@ function App() {
                       <Route path="preco" element={<ChangePriceModal />} />
                     </Route>
                   </Route>
-                  <Route path="/novo-relatorio" element={<StartSetPrices />} />
+                  <Route
+                    path="/novo-relatorio"
+                    element={
+                      <ProtectRoutes>
+                        <StartSetPrices />
+                      </ProtectRoutes>
+                    }
+                  />
                   <Route
                     path="/novo-relatorio/manual"
-                    element={<NewReport />}
+                    element={
+                      <ProtectRoutes>
+                        <NewReport />
+                      </ProtectRoutes>
+                    }
                   />
                   <Route
                     path="/novo-relatorio/automatico"
                     element={
-                      <StepperProvider>
-                        <AutomateNewReport />
-                      </StepperProvider>
+                      <ProtectRoutes>
+                        <StepperProvider>
+                          <AutomateNewReport />
+                        </StepperProvider>
+                      </ProtectRoutes>
                     }
                   />
                 </Routes>

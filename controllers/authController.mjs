@@ -1,10 +1,9 @@
-const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
-const User = require('./../models/userModel');
-const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
-const SendMail = require('./../utils/email');
-const crypto = require('crypto');
+import AppError from '../utils/appError.mjs';
+import catchAsync from '../utils/catchAsync.mjs';
+import User from '../models/userModel.mjs';
+import jwt from 'jsonwebtoken';
+import { promisify } from 'util';
+import crypto from 'crypto';
 
 const signToken = (id) => {
   return jwt.sign({ id: id }, process.env.JWT_SECRET, {
@@ -36,19 +35,18 @@ const createSendCookie = (user, statusCode, res) => {
   });
 };
 
-exports.signup = catchAsync(async (req, res, next) => {
-  const { email, password, passwordConfirm } = req.body;
+const signup = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
   const newUser = await User.create({
     email,
     password,
-    passwordConfirm,
   });
 
   createSendCookie(newUser, 201, res);
 });
 
-exports.login = catchAsync(async (req, res, next) => {
+const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email && !password)
@@ -62,7 +60,7 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendCookie(user, 200, res);
 });
 
-exports.protect = catchAsync(async (req, res, next) => {
+const protect = catchAsync(async (req, res, next) => {
   let token;
 
   //Verifies if the token is valid.
@@ -92,7 +90,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.restrictTo = (...role) => {
+const restrictTo = (...role) => {
   return (req, res, next) => {
     if (!role.includes(req.user.role))
       return next(
@@ -103,50 +101,13 @@ exports.restrictTo = (...role) => {
   };
 };
 
-exports.resetPassword = catchAsync(async (req, res, next) => {
-  const token = req.params.resetToken;
-  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpiration: { $gt: Date.now() },
-  });
-
-  if (!user)
-    return next(
-      new AppError(
-        'Atualização de senha falhou: token inválido. Por favor, tente novamente.',
-        400
-      )
-    );
-
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpiration = undefined;
-
-  await user.save();
-
-  createSendCookie(user, 200, res);
-});
-
-exports.forgotPassword = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-
-  if (!user) return next(new AppError('Usuário não encontrado', 404));
-
-  const resetToken = user.getPasswordResetToken();
-
-  await user.save({
-    validateBeforeSave: false,
-  });
-
-  await new SendMail().sendDummyMail({
-    example: 'send password reset',
-    resetToken,
-  });
-
+const auth = (req, res, next) => {
   res.status(200).json({
     status: 'success',
-    message: 'Reset token enviado',
+    data: {
+      user: req.user,
+    },
   });
-});
+};
+
+export { restrictTo, login, protect, signup, auth };

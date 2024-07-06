@@ -10,8 +10,11 @@ import extractRouter from './routers/extractRouter.mjs';
 import semanaRouter from './routers/semanaRouter.mjs';
 import ingredienteRouter from './routers/ingredienteRouter.mjs';
 import produtoRouter from './routers/produtoRouter.mjs';
+import authRouter from './routers/authRouter.mjs';
+import cookieParser from 'cookie-parser';
 
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 
 app.use(morgan('dev'));
 
@@ -20,6 +23,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use('/api/v1/auth', authRouter);
 
 app.use('/api/v1/extract', extractRouter);
 

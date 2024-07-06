@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+import mongoose from 'mongoose';
+import validator from 'validator';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -16,18 +16,6 @@ const userSchema = new mongoose.Schema({
     select: false,
     minlength: [8, 'A Password should have more than 8 characters'],
   },
-  passwordConfirm: {
-    type: String,
-    required: true,
-    select: false,
-    minlength: [8, 'A password confirm should be longer than 8 characters'],
-    validate: {
-      validator: function (field) {
-        return field === this.password;
-      },
-      message: 'Passwords should match',
-    },
-  },
 
   createdAt: {
     type: Date,
@@ -35,8 +23,13 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 
-  passwordResetToken: String,
-  passwordResetExpiration: String,
+  role: {
+    type: String,
+    enum: ['master', 'admin'],
+    default: 'admin',
+    select: false,
+  },
+
   passwordChangedAt: Date,
 });
 
@@ -44,8 +37,6 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
-
-  this.passwordConfirm = undefined;
 
   next();
 });
@@ -57,19 +48,6 @@ userSchema.pre('save', async function (next) {
 
   next();
 });
-
-userSchema.methods.getPasswordResetToken = function () {
-  let token = crypto.randomBytes(32).toString('hex');
-
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
-
-  this.passwordResetExpiration = Date.now() + 10 * 60 * 1000;
-
-  return token;
-};
 
 userSchema.methods.correctPassword = async function (
   reqPassword,
@@ -93,4 +71,4 @@ userSchema.methods.changedPasswordAfter = function (jwtTimeStamp) {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;
