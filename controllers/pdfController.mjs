@@ -90,8 +90,11 @@ const generatePrices = async (req, res, next) => {
 
   if (Number(useAutomate) !== 1) {
     req.body.precos = JSON.parse(req.body.precos);
+
     return next();
   }
+
+  console.log('passou errado');
 
   const allRawPrices = [];
 

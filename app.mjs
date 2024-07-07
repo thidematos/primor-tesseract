@@ -40,6 +40,10 @@ app.all('/api/v1/*', (req, res, next) => {
   next(new AppError(`Could not find ${req.originalUrl} in this server`, 404));
 });
 
+app.all('/*', (req, res, next) => {
+  res.sendFile('public/index.html', { root: '.' });
+});
+
 app.use(globalErrorHandler);
 
 export default app;

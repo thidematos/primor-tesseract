@@ -547,8 +547,7 @@ function ExtractProvider({ children }) {
       preco: 36.61,
     },
   ];
-  */
-
+*/
   async function extractPDFData(...file) {
     dispatch({ type: "uploaded/loading", payload: file });
 
