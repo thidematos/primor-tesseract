@@ -16,7 +16,7 @@ function IngredientsNavigation() {
   if (!currentIngredient) return null;
 
   return (
-    <ul className="col-span-2 flex h-[500px] w-[85%] flex-col items-center justify-start self-center overflow-y-scroll rounded border border-blue-400 shadow-xl">
+    <ul className="3xl:h-[600px] col-span-2 flex h-[500px] w-[85%] flex-col items-center justify-start self-center overflow-y-scroll rounded border border-blue-400 shadow-xl">
       {currentIngredient.precoSemana.map((el, ind, arr) => (
         <IngredientPriceDate
           key={el.semana}

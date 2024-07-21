@@ -39,7 +39,7 @@ function ProductsContainer() {
   const { sortedProducts } = useProducts();
 
   return (
-    <div className="grid h-[500px] w-full grid-cols-3 gap-10 overflow-y-scroll">
+    <div className="3xl:h-[600px] grid h-[500px] w-full grid-cols-3 gap-10 overflow-y-scroll">
       {sortedProducts.map((product) => (
         <ProductCard product={product} key={product.idExterno} />
       ))}

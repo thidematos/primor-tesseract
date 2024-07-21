@@ -57,7 +57,7 @@ function PriceChart() {
   return (
     <>
       <Title>{currentProduct.nome}</Title>
-      <div className="flex h-[550px] w-[90%] flex-col items-center justify-center rounded-lg border border-gray-300 py-6 shadow-xl">
+      <div className="3xl:h-[600px] flex h-[550px] w-[90%] flex-col items-center justify-center rounded-lg border border-gray-300 py-6 shadow-xl">
         <h2 className="mb-10 font-noto text-lg text-gray-800 drop-shadow-sm">
           Histórico de preços distribuídos por datas de relatórios
         </h2>

@@ -26,7 +26,7 @@ function IngredientsContainer() {
   if (!ingredientsSorted) return null;
 
   return (
-    <div className="grid h-[500px] w-full grid-cols-4 gap-10 overflow-y-scroll p-6">
+    <div className="3xl:h-[600px] grid h-[500px] w-full grid-cols-4 gap-10 overflow-y-scroll p-6">
       {ingredientsSorted.map((ingredient) => (
         <IngredientCard key={ingredient.idExterno} insumo={ingredient} />
       ))}
